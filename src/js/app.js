@@ -1,5 +1,5 @@
 
-var app = angular.module('app', ['ngParallax']);
+var app = angular.module('app', ['ngRoute','ngParallax']);
 
 app.controller('ctrl', function($scope){
 
