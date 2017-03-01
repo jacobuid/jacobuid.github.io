@@ -4,6 +4,7 @@ var app = angular.module('app', ['ngRoute','ngParallax']);
 app.controller('ctrl', function($scope){
 
     $scope.hello = "Hello World!";
+    $scope.marioBG = '/src/img/mario.jpg';
 
 });
 
