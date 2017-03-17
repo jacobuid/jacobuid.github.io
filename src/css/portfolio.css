@@ -1,0 +1,9 @@
+body{ font-family:Arial; }
+header,nav,section,footer { padding:10px }
+
+header,nav { background:#222 }
+section:nth-child(2n) { background:#222; color:#fff }
+section:nth-child(2n-1) { background-attachment: fixed; }
+section:nth-child(1) { background-image:url('https://jacobuid.github.io/src/img/bg-html.jpg') }
+section:nth-child(3) { background-image:url('https://jacobuid.github.io/src/img/bg-css.jpg') }
+section:nth-child(5) { background-image:url('https://jacobuid.github.io/src/img/bg-javascript.jpg') }
