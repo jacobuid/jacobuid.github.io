@@ -10,6 +10,13 @@ var run = function(){
 // 		console.log(response)
 // 	});
 	
+	IN.Event.on(IN, "auth", authPassed);
+	
+	
+
+}
+
+var authPassed = function(){
 	IN.API.Profile("me")
 		.fields([
 			"firstName", 
@@ -19,5 +26,4 @@ var run = function(){
 		]).result(function(result) {
 			alert(JSON.stringify(result));
 		});
-
 }
