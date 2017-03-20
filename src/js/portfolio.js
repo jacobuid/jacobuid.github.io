@@ -1,13 +1,6 @@
 console.info("portfolio.js is loaded...");
 
 
-$(document).ready(function () {
-	$.getJSON("https://api.twitter.com/1/users/show.json?callback=?&amp;screen_name=jacobuid", function (data) {
-	   console.log(data);
-	});
-});
-
-
 var run = function(){
 	console.info("run() ran...");
 
@@ -18,11 +11,11 @@ var run = function(){
 // 		console.log(response)
 // 	});
 	
-	if(!IN.User.isAuthorized()){
-		IN.User.authorize(authPassed);
-	}
+// 	if(!IN.User.isAuthorized()){
+// 		IN.User.authorize(authPassed);
+// 	}
 	
-	
+	IN.API.Raw('/people/~?format=json').method('GET').body(bodyContent).result(resultCallback);
 
 }
 
@@ -30,7 +23,7 @@ var authPassed = function(){
 	IN.API.Profile("me").result(JacobLinkedInData);
 }
 
-var JacobLinkedInData = function (profiles) {
+var resultCallback = function (profiles) {
     var profile = profiles.values[0];
     var id=profile.id;
     var firstName=profile.firstName; 
