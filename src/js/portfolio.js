@@ -10,7 +10,9 @@ var run = function(){
 // 		console.log(response)
 // 	});
 	
-	IN.User.authorize(authPassed);
+	if(!IN.User.isAuthorized()){
+		IN.User.authorize(authPassed);
+	}
 	
 	
 
