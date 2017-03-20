@@ -17,13 +17,16 @@ var run = function(){
 }
 
 var authPassed = function(){
-	IN.API.Profile("me")
-		.fields([
-			"firstName", 
-			"lastName", 
-			"headline", 
-			"summary"
-		]).result(function(result) {
-			alert(JSON.stringify(result));
-		});
+	IN.API.Profile("me").result(JacobLinkedInData);
+}
+
+var JacobLinkedInData = function (profiles) {
+    var profile = profiles.values[0];
+    var id=profile.id;
+    var firstName=profile.firstName; 
+    var lastName=profile.lastName; 
+    var photo=profile.pictureUrl; 
+    var headline=profile.headline; 
+
+    //use information captured above
 }
