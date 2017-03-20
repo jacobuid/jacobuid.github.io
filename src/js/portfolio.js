@@ -15,7 +15,7 @@ var run = function(){
 // 		IN.User.authorize(authPassed);
 // 	}
 	
-	IN.API.Profile(url)
+	IN.API.Profile('https://api.linkedin.com/v1/people/~?format=json')
             .fields("firstName", "picture-urls::(original)", "picture-url")
           .result(displayProfiles)
           .error(displayProfilesErrors);
