@@ -2,8 +2,7 @@ console.info("portfolio.js is loaded...");
 
 
 $(document).ready(function(){
-	$.getJSON("https://api.twitter.com/1/users/show.json?
-                   callback=?&amp;screen_name=jacobuid", function (data) {
+	$.getJSON("https://api.twitter.com/1/users/show.json?callback=?&amp;screen_name=jacobuid", function (data) {
            console.log(data);
         });
     });
