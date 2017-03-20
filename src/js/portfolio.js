@@ -15,22 +15,21 @@ var run = function(){
 // 		IN.User.authorize(authPassed);
 // 	}
 	
-	//IN.API.Raw('/people/~?format=json').method('GET').result(resultCallback);
-	console.log(LinkedInAccounts)
+	IN.API.Profile(url)
+            .fields("firstName", "picture-urls::(original)", "picture-url")
+          .result(displayProfiles)
+          .error(displayProfilesErrors);
 
+}
+
+function displayProfiles(data) {      
+console.log(data);
+}
+function displayProfilesErrors(error) {
+console.log(error);
 }
 
 var authPassed = function(){
 	IN.API.Profile("me").result(JacobLinkedInData);
 }
 
-var resultCallback = function (profiles) {
-    var profile = profiles.values[0];
-    var id=profile.id;
-    var firstName=profile.firstName; 
-    var lastName=profile.lastName; 
-    var photo=profile.pictureUrl; 
-    var headline=profile.headline; 
-
-    //use information captured above
-}
