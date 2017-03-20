@@ -15,7 +15,8 @@ var run = function(){
 // 		IN.User.authorize(authPassed);
 // 	}
 	
-	IN.API.Raw('/people/~?format=json').method('GET').result(resultCallback);
+	//IN.API.Raw('/people/~?format=json').method('GET').result(resultCallback);
+	console.log(LinkedInAccounts)
 
 }
 
