@@ -10,7 +10,7 @@ var run = function(){
 // 		console.log(response)
 // 	});
 	
-	IN.Event.on(IN, "auth", authPassed);
+	IN.User.authorize(authPassed);
 	
 	
 
