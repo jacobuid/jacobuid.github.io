@@ -14,3 +14,8 @@ section:nth-child(2n-1) { background-attachment: fixed; }
 section:nth-child(1) { background-image: url('https://jacobuid.github.io/src/img/bg-html.jpg') }
 section:nth-child(3) { background-image: url('https://jacobuid.github.io/src/img/bg-css.jpg') }
 section:nth-child(5) { background-image: url('https://jacobuid.github.io/src/img/bg-javascript.jpg') }
+
+
+@media only screen and (max-width: 800px) {
+    header video { max-width: 180%; }
+}
