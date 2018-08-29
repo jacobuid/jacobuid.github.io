@@ -1,9 +1,14 @@
-body{ font-family:Arial; }
-header,nav,section,footer { padding:10px }
+body{ font-family: Arial; }
+header,nav,section,footer { padding: 10px }
 
-header,nav { background:#222 }
-section:nth-child(2n) { background:#222; color:#fff }
+header { position: relative; text-align: center; color: #fff; text-shadow: 1px 1px 4px rgba(0, 0, 0, .6); }
+header video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -100; transform: translateX(-50%) translateY(-50%); background-color: #222; background-size: cover; transition: 1s opacity; }
+header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; background-color: rgba(0, 0, 0, .7); z-index: -90; }
+    header #intro{ margin: 40px 0; }
+    header #header-logo{ max-width: 400px; width:100%; margin:40px 0; }
+
+section:nth-child(2n) { background: #f4f4f4; color: #333 }
 section:nth-child(2n-1) { background-attachment: fixed; }
-section:nth-child(1) { background-image:url('https://jacobuid.github.io/src/img/bg-html.jpg') }
-section:nth-child(3) { background-image:url('https://jacobuid.github.io/src/img/bg-css.jpg') }
-section:nth-child(5) { background-image:url('https://jacobuid.github.io/src/img/bg-javascript.jpg') }
+section:nth-child(1) { background-image: url('https://jacobuid.github.io/src/img/bg-html.jpg') }
+section:nth-child(3) { background-image: url('https://jacobuid.github.io/src/img/bg-css.jpg') }
+section:nth-child(5) { background-image: url('https://jacobuid.github.io/src/img/bg-javascript.jpg') }
