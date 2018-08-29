@@ -1,11 +1,13 @@
 body{ font-family: Arial; }
 header,nav,section,footer { padding: 10px }
 
-header { position: relative; text-align: center; color: #fff; text-shadow: 1px 1px 4px rgba(0, 0, 0, .6); }
+header { position: relative; overflow: hidden; text-align: center; color: #fff; text-shadow: 1px 1px 4px rgba(0, 0, 0, .6); }
 header video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -100; transform: translateX(-50%) translateY(-50%); background-color: #222; background-size: cover; transition: 1s opacity; }
 header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; background-color: rgba(0, 0, 0, .7); z-index: -90; }
-    header #intro{ margin: 40px 0; }
-    header #header-logo{ max-width: 400px; width:100%; margin:40px 0; }
+    header nav { float: right; }
+    header nav a { color: #fff; margin:0 10px }
+    header #intro{ margin: 80px 0 40px; }
+    header #header-logo{ max-width: 400px; width:80%; margin:40px 0 80px; }
 
 section:nth-child(2n) { background: #f4f4f4; color: #333 }
 section:nth-child(2n-1) { background-attachment: fixed; }
