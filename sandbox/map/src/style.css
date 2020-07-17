@@ -1,0 +1,21 @@
+.ism .clip { position:relative }
+.ism .levels { position: absolute; left:0; top:0; margin: 6px 0 0 22px; }
+.ism .view { position:relative; }
+
+
+    /* === Background Map === */
+    .ism .image { width:100% }
+
+    /* === Canvas === */
+    .ism .canvas { position:absolute; top:0; left:50%; }
+        .ism .canvas i { color: #de7722; text-shadow: 1px 1px 0 #000; }
+        .ism .canvas i:hover { cursor:pointer }
+        
+
+    /* === Canvas (Admin) === */
+    .ism.admin .canvas { cursor:crosshair }
+        .ism.admin .canvas i:active { cursor:none; text-shadow: 2px 2px 2px #000 }
+
+.no-select { -webkit-user-select: none; -moz-user-select: none; -o-user-select: none; -ms-user-select: none; -khtml-user-select: none; user-select: none  }
+
+.drop-content > p{margin:0}

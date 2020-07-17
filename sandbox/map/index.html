@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <title>Interactive Site Map | RealPage, Inc &copy;</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta charset="UTF-8" />
+
+        <!-- load bootstrap and fontawesome via CDN -->
+        <link rel="stylesheet" href="./src/bootstrap.min.css" />
+        <link rel="stylesheet" href="./src/fontawesome.min.css" />
+        <link rel="stylesheet" href="./src/drop-theme-arrows.min.css" />
+        <link rel="stylesheet" href="./src/drop-theme-arrows-bounce.min.css" />
+        <link
+            rel="stylesheet"
+            href="./src/drop-theme-arrows-bounce-dark.min.css"
+        />
+
+        <link rel="stylesheet" href="./src/style.css" />
+
+        <script src="./src/jquery.min.js"></script>
+        <script src="./src/bootstrap.min.js"></script>
+        <script src="./src/tether.min.js"></script>
+        <script src="./src/drop.min.js"></script>
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/"
+                            >Interactive Site Map</a
+                        >
+                        <button class="btn btn-default navbar-btn toggle-role">
+                            Toggle Role
+                        </button>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <main class="container">
+            <div siteid="1234567" id="map1" class="row"></div>
+        </main>
+
+        <!-- load JavaScript -->
+        <script src="./src/script.js"></script>
+        <script src="./init.js"></script>
+    </body>
+</html>
