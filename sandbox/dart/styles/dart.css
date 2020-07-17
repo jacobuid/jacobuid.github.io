@@ -1,0 +1,36 @@
+body{ font-weight:normal; font-family:Arial; position:absolute; top:0; left:0; width:100%; height:100%;margin:0; overflow:hidden;	background:#43640a url('../images/body-bg.png')  no-repeat 50% 0; background-size:100%;}
+	#page {position:relative; width:320px; height:480px; overflow:hidden; z-index:100; }
+	.cdbg{background:url('../images/card-bg.png') 50% 80px no-repeat;}
+	#card{ text-align:center; position:relative; width:250px; height:325px; margin:80px auto 20px; overflow:hidden; -webkit-border-radius: 2px; border-radius: 2px; background-color:#ebe8e4; }
+		.pad-wrap{ padding:5px; overflow:hidden; }
+			hr{ margin:4px 0; border-left:none; border-right:none; border-top:solid 1px #dddad7; border-bottom:solid 1px #efede9; clear:both; }
+			hr.top{ margin:58px 0 4px; }
+				#logo {position:absolute; top:90px; left:50%; margin-left:-20px; width:41px; height:40px;}
+				#flip{ position:absolute; top:90px; right:44px; width:22px; height:29px; border:none; outline:none; }
+				.reverse{ display:none; }
+				#status{ height:54px; color:#fff; font: bold 20px/54px Arial; margin:0; background:url('../images/active-bg.jpg') 50% 0 no-repeat }
+				
+
+.left{text-align:left;}
+.right{text-align:right;}
+
+.pulse{ position:absolute; top:0; left:0; width:100%; height:100%;
+background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,0)), color-stop(100%,rgba(189,219,168,1))); /* Chrome,Safari4+ */
+background: -webkit-radial-gradient(center, ellipse cover, rgba(255,255,255,0) 0%,rgba(189,219,168,1) 100%); /* Chrome10+,Safari5.1+ */
+background: radial-gradient(ellipse at center, rgba(255,255,255,0) 0%,rgba(189,219,168,1) 100%); /* W3C */
+}
+
+#date { overflow:hidden; margin:2px 0; }
+.countdown_row { display:block; width:156px; margin:0 auto; overflow:hidden; }
+.countdown_show3 .countdown_section { width:52px; }
+.countdown_section { display: block; float: left; text-align: center; font-size:11px; color:#444; }
+.countdown_amount { font:bold 26px Arial; color:#111; padding-bottom:5px; display:block;}
+.countdown_descr { display: block; width: 100%; }
+
+#local,#price{ font:bold 17px Arial; margin:2px 0; }
+#adult{ font:bold 32px Arial; margin:2px 0;  }
+.qrcode{ width:90px; border:solid 1px #ddd }
+aside{ width:50%; float:left; font-size:11px }
+ #expire,#begin{ margin:5px 0 0 }
+ #ticket,#phone{ margin:0 0 5px; font-size: 14px; }
+ #disclaim{ display:block; -webkit-border-radius: 10px; border-radius: 10px; background-color:#c4c3c2; margin:3px auto 0; padding:3px 0; width:175px; color:#fff; font:bold 12px Arial;   }

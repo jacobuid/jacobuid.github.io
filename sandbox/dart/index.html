@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Dart</title>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+		<link rel="apple-touch-icon" href="images/icon-iphone-57x57.png">
+		<link rel="apple-touch-icon" href="images/icon-iphone-114x114.png" sizes="114x114">
+		<link rel="stylesheet" type="text/css" href="styles/dart.css">
+		<script src="scripts/date.js"></script>
+		<script src="scripts/jquery.1.10.2.js"></script>
+		<script src="scripts/jquery.countdown.js"></script>
+		<script src="scripts/jquery.flippy.js"></script>
+		<script src="scripts/dateformat.js"></script>
+		<script src="scripts/initialize.js"></script>
+	</head>
+	<body>
+		<div class="pulse"></div>
+		<div id="page" class="cdbg">
+			<section id="card" class="front">
+				<hr class="top" />
+				<p id="status">ACTIVE</p>
+				<hr/>
+				<div id="count">
+					<span class="countdown_row countdown_show3">
+						<span class="countdown_section"><span class="countdown_amount">15</span><span class="countdown_label">HOURS</span></span>
+						<span class="countdown_section"><span class="countdown_amount">22</span><span class="countdown_label">MIN.</span></span>
+						<span class="countdown_section"><span class="countdown_amount">59</span><span class="countdown_label">SEC.</span></span>
+					</span>
+				</div>
+				<hr/>
+				<p id="local">LOCAL DAY PASS</p>
+				<hr/>
+				<p id="adult">ADULT</p>
+				<hr/>
+				<aside>
+					<div id="begin">
+						<strong>Activated</strong>
+						<br>
+					</div>
+				</aside>
+				<aside>
+					<div id="expire">
+						<strong>Expires</strong>
+						<br>
+					</div>
+				</aside>
+			</section>
+			<img id="logo" src="images/logo.png" />
+			<img id="flip" class="forward" src="images/flip.png" />
+			<img id="flip" class="reverse" src="images/flip-rev.png" />
+		</div>
+		<script>
+			$(document).ready(function(){
+				addCountdown();
+				pulsate('.pulse');
+				$('.forward').click(function(){ flip() });
+				$('.reverse').click(function(){ back() });
+				
+				$('#expire').append('<span>'+getExpiration().format("mm/dd/yyyy")+'</span><br>').append('<span>'+getExpiration().format("hh:MM")+' AM</span><br>');
+				$('#begin').append('<span>'+getInitialization().format("mm/dd/yyyy")+'</span><br>').append('<span>'+getInitialization().format("hh:MM")+' AM</span><br>');
+			});
+		</script>
+	</body>
+</html>
