@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mario</title>
+    <style>
+        #mario{ position:absolute; bottom:50px; width:40px; height:70px; background-size:contain; background-repeat: no-repeat }
+        .left { background:url(left-stop.gif) }
+        .right { background:url(right-stop.gif) }
+        .left.move { background:url(left.gif) }
+        .right.move { background:url(right.gif) }
+        body{ background:url(bg.jpg) 0% 0% repeat-x;   position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="mario" class="right"></div>
+
+</body>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        var mario = $('#mario');
+        
+        document.addEventListener('keydown', function(event){
+        
+            var key = event.keyCode;
+            
+            // left key pressed
+            if(key == 37){
+                move(mario, 'left');
+            }
+            
+            // right key pressed
+            if(key == 39){
+                move(mario, 'right');
+            }
+            
+            // space key pressed
+            if(key == 32){
+                jump(mario);
+            }
+                
+        });
+        
+        
+        document.addEventListener('keyup', function(event){
+        
+            var key = event.keyCode;
+            
+            // left or right key is released
+            if(key === 37 || key === 39){
+                stop(mario);
+            }
+            
+        });
+        
+        
+        var stop = function(element){
+            element.removeClass('move');
+            element.stop(true);
+        };
+        
+        var jump = function(element){
+            element.animate({
+                bottom: "+=100px"
+            },200, function() {
+                // Animation complete.
+                element.animate({
+                    bottom: "-=100px"
+                },200);
+            });
+        };
+        
+        var move = function(element, direction){
+            
+            if(direction === 'left'){
+                element.attr('class', 'left move');
+                element.animate({
+                    left: "-=15px"
+                },100);
+            }
+            if(direction === 'right'){
+                element.attr('class', 'right move');
+                element.animate({
+                    left: "+=15px"
+                },100);
+            } 
+            
+        }
+        
+    </script>
+</html>

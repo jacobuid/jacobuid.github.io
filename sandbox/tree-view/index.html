@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Title</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+	<script type='text/javascript' src="http://mbraak.github.io/jqTree/tree.jquery.js"></script>
+	<script type='text/javascript' src="entity.js"></script>
+</head>
+<body>
+	<input id="filter" name="filter" placeholder="Filter">
+	<div id="tree"></div>
+	<script type='text/javascript' src="tree.js"></script>
+    <script>
+		(function($) {    
+			var treeSelect = $('#tree'),
+				filterSelect = $('#filter'),
+				_filtering = false,
+				thread = null;
+			
+			addFilteredTree(treeSelect,filterSelect,_filtering,thread,treeDataOutput);
+		
+		})(jQuery);
+	</script>
+</body>
+</html
+
