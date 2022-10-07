@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Document</title>
+      <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+      <style>
+            body{ 
+                  text-align: center;
+                  font-family: 'Roboto';
+            }
+            #screen {
+                  font-size: 120px;
+                  padding: 20px;
+                   border:solid #00f 5px;
+            }
+            #letters span{
+                  padding:0 5px;
+                  font-size: 20px;
+                  color:#666;
+                  display: inline-block;
+            }
+            #letters span.correct{
+                  display: none;
+            }
+            button{
+                  font-size: 20px;
+                  padding:5px 10px;
+                  margin: 20px;
+            }
+            @media (max-width: 800px) {
+                  #screen {
+                        font-size: 48px;
+                  } 
+            }
+      </style>
+</head>
+<body>
+      <div id="letters"></div>
+      <div id="screen"></div>
+      <button onclick="correct()">Right</button>
+      <button onclick="incorrect()">Wrong</button>
+      <button onclick="reset()">Reset</button>
+      <script>
+            let letters = []
+            let current = null;
+            let screenDOM = document.querySelector('#screen');
+            let lettersDOM = document.querySelector('#letters');
+            let timeout = 0;
+
+            let getLetter = () => {
+                  let index = Math.floor(Math.random() * (25 - 0 + 1) + 0)
+                  if(letters[index].flag === true){
+                        timeout++
+                        if(timeout>200){
+                              return -1;
+                        }
+                        return getLetter();
+                  } else {
+                        timeout = 0
+                        return index;
+                  }
+            }
+
+            function updateLetters(){
+                  lettersDOM.innerHTML = '';
+                  for(let i=0; i<letters.length; i++){
+                        let span = document.createElement('span');
+                        (letters[i].flag) ? span.classList.add("correct") : '';
+                        span.innerHTML += letters[i].value; 
+                        lettersDOM.append(span);
+                  }
+                  
+            }
+
+            function correct(){
+                  letters[current].flag = true;
+                  updateLetters()
+                  current = getLetter();
+                  if(current === -1){
+                        screenDOM.innerHTML = "Congratulations!!";
+                  } else {
+                        screenDOM.innerHTML = letters[current].value;
+                  }
+
+            }
+
+            function incorrect(){
+                  current = getLetter();
+                  screenDOM.innerHTML = letters[current].value;
+            }
+
+            let reset = function () {
+                  letters = [
+                        {value: 'Aa', flag:false},
+                        {value: 'Bb', flag:false},
+                        {value: 'Cc', flag:false},
+                        {value: 'Dd', flag:false},
+                        {value: 'Ee', flag:false},
+                        {value: 'Ff', flag:false},
+                        {value: 'Gg', flag:false},
+                        {value: 'Hh', flag:false},
+                        {value: 'Ii', flag:false},
+                        {value: 'Jj', flag:false},
+                        {value: 'Kk', flag:false},
+                        {value: 'Ll', flag:false},
+                        {value: 'Mm', flag:false},
+                        {value: 'Nn', flag:false},
+                        {value: 'Oo', flag:false},
+                        {value: 'Pp', flag:false},
+                        {value: 'Qq', flag:false},
+                        {value: 'Rr', flag:false},
+                        {value: 'Ss', flag:false},
+                        {value: 'Tt', flag:false},
+                        {value: 'Uu', flag:false},
+                        {value: 'Vv', flag:false},
+                        {value: 'Ww', flag:false},
+                        {value: 'Xx', flag:false},
+                        {value: 'Yy', flag:false},
+                        {value: 'Zz', flag:false}
+                  ];
+                  current = getLetter();
+                  screenDOM.innerHTML = letters[current].value;
+                  updateLetters()
+            };
+            
+            (function(){
+                  reset()
+            })()
+            
+      </script>
+</body>
+</html>
