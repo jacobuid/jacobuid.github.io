@@ -1,38 +1,39 @@
 .App {
-  text-align: center;
+  
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
+header,nav,section,footer { padding: 10px }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+header { position: relative; overflow: hidden; text-align: center; color: #fff; text-shadow: 1px 1px 4px rgba(0, 0, 0, .6); }
+header video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -100; transform: translateX(-50%) translateY(-50%); background-color: #222; background-size: cover; transition: 1s opacity; }
+header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; background-color: rgba(0, 0, 0, .7); z-index: -90; }
+    header nav { float: right; }
+    header nav a { color: #fff; margin:0 10px }
+    header #intro{ margin: 80px 0 40px; }
+    header #header-logo{ max-width: 400px; width:80%; margin:40px 0 80px; }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+
+    /* Mobile-first: sections stack vertically */
+.grid-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+.grid-section {
+  background: #f5f5f5;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Tablet and up: sections side by side */
+@media (min-width: 600px) {
+  .grid-container {
+    flex-direction: row;
   }
-  to {
-    transform: rotate(360deg);
+  .grid-section {
+    flex: 1;
   }
 }
