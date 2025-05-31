@@ -13,20 +13,16 @@ header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; backgrou
     header #header-logo{ max-width: 400px; width:80%; margin:40px 0 80px; }
 
 
-    /* Mobile-first: sections stack vertically */
-.grid-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-}
-
-.grid-section {
-  background: #f5f5f5;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-}
+/* Mobile-first: sections stack vertically */
+.grid-container { display: flex; flex-direction: column; gap: 1rem; margin: 1rem; }
+    .grid-section { border:1rem #ccc solid; padding: 1.5rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .grid-section h2{ margin-top:0; }
+        .grid-section h2 .svg-inline--fa { padding-right: .5rem; }
+        .grid-section p { margin-bottom: 0; }
+    
+    /* Animation for sections */
+    .grid-section { opacity: 0; transform: scale(0.95); transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);}
+    .grid-section.visible { opacity: 1; transform: scale(1);}
 
 /* Tablet and up: sections side by side */
 @media (min-width: 600px) {

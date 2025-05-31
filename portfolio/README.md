@@ -1,4 +1,15 @@
 # Getting Started with Create React App
+# jacobuid.github.io
+Repository Github Pages Setup
+
+Resume:
+https://jacobuid.github.io/
+
+Sandbox:
+https://jacobuid.github.io/sandbox/
+
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
