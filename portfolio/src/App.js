@@ -3,8 +3,8 @@ import BackgroundVideo from './assets/video/macbook.mp4';
 import BackgroundPlaceholder from './assets/video/macbook.png';
 import headerLogo from './assets/img/logo-1000px.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCode, faCloudBolt, faSun, faTerminal, faDesktop } from '@fortawesome/free-solid-svg-icons';
-import { faJs } from '@fortawesome/free-brands-svg-icons';
+import { faCode, faCloudBolt, faSun, faTerminal, faDesktop, faMobileButton } from '@fortawesome/free-solid-svg-icons';
+import { faJs } from '@fortawesome/free-brands-svg-icons'
 
 import './App.css';
 
@@ -83,10 +83,10 @@ function App() {
                     </section>
                     <section class="grid-section section-b">
                         <h2>
-                            <FontAwesomeIcon icon={faJs} beat />
-                            JavaScript Frameworks
+                            <FontAwesomeIcon icon={faMobileButton} beat />
+                            Responsive Design
                         </h2>
-                        <p>I have extensive experience building web applications with modern frameworks such as <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">React</a> &amp; <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">Next.js</a>, <a href="https://angular.io/" target="_blank" rel="noopener noreferrer">Angular</a>, and <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">Vue.js</a>. My background also includes working with legacy technologies like <a href="https://jquery.com/" target="_blank" rel="noopener noreferrer">jQuery</a>, <a href="https://dojotoolkit.org/" target="_blank" rel="noopener noreferrer">Dojo Toolkit</a>, and <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer">BootstrapJS</a>, which gives me a strong foundation for modernizing and refactoring older codebases to meet today’s standards.</p>
+                        <p>I have extensive experience using Adobe products such as <a href="https://www.adobe.com/products/photoshop.html" target="_blank" rel="noopener noreferrer">Photoshop</a> and <a href="https://www.adobe.com/products/illustrator.html" target="_blank" rel="noopener noreferrer">Illustrator</a> to create and refine visual assets for the web. In addition, I have worked with modern design tools like <a href="https://www.sketch.com/" target="_blank" rel="noopener noreferrer">Sketch</a> and <a href="https://www.figma.com/" target="_blank" rel="noopener noreferrer">Figma</a>, which help bridge the gap between design and front-end development. I am skilled at developing for all screen sizes—mobile, tablet, and desktop—by utilizing <a href="https://developer.mozilla.org/en-US/docs/Glossary/Mobile_First" target="_blank" rel="noopener noreferrer">mobile-first</a>, <a href="https://www.w3schools.com/html/html_responsive.asp" target="_blank" rel="noopener noreferrer">responsive design</a> principles to ensure a seamless user experience across devices.</p>
                     </section>
                 </div>
                 <div class="grid-container">
