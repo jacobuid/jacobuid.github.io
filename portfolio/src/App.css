@@ -12,13 +12,20 @@ header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; backgrou
     header #intro{ margin: 80px 0 40px; }
     header #header-logo{ max-width: 400px; width:80%; margin:40px 0 80px; }
 
-
+.h1{ margin:1rem; padding: 1rem; background: black; color: white; font-family: 'Courier New', Courier, monospace; }
+ .h1 .svg-inline--fa { padding-right: .5rem; }
 /* Mobile-first: sections stack vertically */
 .grid-container { display: flex; flex-direction: column; gap: 1rem; margin: 1rem; }
     .grid-section { border:1rem #ccc solid; padding: 1.5rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .grid-section h2{ margin-top:0; }
         .grid-section h2 .svg-inline--fa { padding-right: .5rem; }
         .grid-section p { margin-bottom: 0; }
+
+        .grid-section h2 .svg-inline--fa.fa-code { color: #4CAF50; }
+        .grid-section h2 .svg-inline--fa.fa-js{ color: #F7DF1E; }
+        .grid-section h2 .svg-inline--fa.fa-sun{ color: #4444FF; }
+        .grid-section h2 .svg-inline--fa.fa-cloud-bolt{ color: red; }
+        .grid-section h2 .svg-inline--fa.fa-desktop{ color: gray; }
     
     /* Animation for sections */
     .grid-section { opacity: 0; transform: scale(0.95); transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);}

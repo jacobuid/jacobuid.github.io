@@ -3,7 +3,7 @@ import BackgroundVideo from './assets/video/macbook.mp4';
 import BackgroundPlaceholder from './assets/video/macbook.png';
 import headerLogo from './assets/img/logo-1000px.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCode, faCloudBolt, faSun } from '@fortawesome/free-solid-svg-icons';
+import { faCode, faCloudBolt, faSun, faTerminal, faDesktop } from '@fortawesome/free-solid-svg-icons';
 import { faJs } from '@fortawesome/free-brands-svg-icons';
 
 import './App.css';
@@ -42,6 +42,10 @@ function App() {
                 <img id="header-logo" src={headerLogo} alt="Jacob King Web Developer and Designer" />
             </header>
             <main>
+                <h1 className="h1">
+                    <FontAwesomeIcon icon={faTerminal} fade />
+                    $ Coding Experience
+                </h1>
                 <div class="grid-container">
                     <section class="grid-section section-a">
                         <h2>
@@ -50,13 +54,31 @@ function App() {
                         </h2>
                         <p>
                             With over 10 years of experience, 
-                            I am fluent in HTML, CSS, and JavaScript, 
+                            I am fluent in <a href="https://www.w3schools.com/html/html_intro.asp" target="_blank" rel="noopener noreferrer">HTML</a>, <a href="https://www.w3schools.com/css/css_intro.asp" target="_blank" rel="noopener noreferrer">CSS</a>, and JavaScript, 
                             crafting seamless user experiences with a 
                             touch of creativity and a lot of precision. 
                             From structuring content to styling pixels 
                             and scripting interactivity, I turn design 
                             ideas into responsive, accessible, high-performance 
                             web pages.
+                        </p>
+                    </section>
+                    <section class="grid-section section-b">
+                        <h2>
+                            <FontAwesomeIcon icon={faJs} beat />
+                            JavaScript Frameworks
+                        </h2>
+                        <p>I have extensive experience building web applications with modern frameworks such as <a href="https://react.dev/" target="_blank" rel="noopener noreferrer">React</a> &amp; <a href="https://nextjs.org/" target="_blank" rel="noopener noreferrer">Next.js</a>, <a href="https://angular.io/" target="_blank" rel="noopener noreferrer">Angular</a>, and <a href="https://vuejs.org/" target="_blank" rel="noopener noreferrer">Vue.js</a>. My background also includes working with legacy technologies like <a href="https://jquery.com/" target="_blank" rel="noopener noreferrer">jQuery</a>, <a href="https://dojotoolkit.org/" target="_blank" rel="noopener noreferrer">Dojo Toolkit</a>, and <a href="https://getbootstrap.com/" target="_blank" rel="noopener noreferrer">BootstrapJS</a>, which gives me a strong foundation for modernizing and refactoring older codebases to meet today’s standards.</p>
+                    </section>
+                </div>
+                <div class="grid-container">
+                    <section class="grid-section section-a">
+                        <h2>
+                            <FontAwesomeIcon icon={faDesktop} beat />
+                            Workspace Management
+                        </h2>
+                        <p>
+                            I use <a href="https://git-scm.com/" target="_blank" rel="noopener noreferrer">Git</a> for version control to efficiently manage and track changes across all my project files, ensuring a smooth and collaborative workflow. For package management, I rely on <a href="https://www.npmjs.com/" target="_blank" rel="noopener noreferrer">npm</a> to install and maintain dependencies. My development environment includes <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer">Node.js</a> and <a href="https://expressjs.com/" target="_blank" rel="noopener noreferrer">Express</a> for running local servers, and I often use tools like <a href="https://jsonplaceholder.typicode.com/" target="_blank" rel="noopener noreferrer">JSONPlaceholder</a> to quickly prototype APIs and endpoints during the early stages of a project. This setup allows me to iterate rapidly and maintain a clean, organized codebase.
                         </p>
                     </section>
                     <section class="grid-section section-b">
