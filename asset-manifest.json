@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/static/css/main.c9e98623.css",
-    "main.js": "/static/js/main.b819f490.js",
+    "main.js": "/static/js/main.48ce4e72.js",
     "static/media/macbook.mp4": "/static/media/macbook.8c78ca6e342277970509.mp4",
     "static/media/macbook.png": "/static/media/macbook.040e3b9ebebcc37868ca.png",
     "static/media/logo-1000px.png": "/static/media/logo-1000px.c3192fb1ca2be177793d.png",
     "index.html": "/index.html",
     "main.c9e98623.css.map": "/static/css/main.c9e98623.css.map",
-    "main.b819f490.js.map": "/static/js/main.b819f490.js.map"
+    "main.48ce4e72.js.map": "/static/js/main.48ce4e72.js.map"
   },
   "entrypoints": [
     "static/css/main.c9e98623.css",
-    "static/js/main.b819f490.js"
+    "static/js/main.48ce4e72.js"
   ]
 }
