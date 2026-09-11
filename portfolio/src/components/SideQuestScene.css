@@ -1,0 +1,235 @@
+/* No panel around this scene: the cards are the content, and a dark box
+   behind them only boxed a box. The heading sits straight on the scene, and
+   the column lets the carousel take the room left below it. */
+.quests {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* The whole header is one nes-balloon, so it brings its own white ground, its
+   border image and a tail below its left edge. Nothing inside needs the drop
+   shadow the type would want against the sky - it is on white now - and it all
+   needs dark ink rather than the light colours the panels use.
+
+   NES makes the balloon `display: inline-block`; as a flex item that is
+   blockified and would stretch the full row, so it is aligned to the start to
+   shrink back to its content. The 30px bottom margin NES sets is the tail's
+   clearance and is left alone. */
+.quests__header {
+    align-self: flex-start;
+    max-width: min(100%, 34rem);
+    margin-left: 0;
+    color: var(--ink);
+}
+
+.quests__title {
+    margin: 0 0 0.4rem;
+    font-size: clamp(0.8rem, 3.2vw, 1.1rem);
+    color: var(--ink);
+}
+
+/* The panels put this line in bright yellow, which is unreadable on white, so
+   it takes a dark gold instead and keeps the display face and tracking. */
+.quests__stage {
+    margin: 0 0 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    color: #7a5c00;
+    letter-spacing: 0.12em;
+}
+
+.quests__hint {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* ==========================================================================
+   Side quest carousel
+
+   One card in the middle, its two neighbours faded and half off stage, and
+   everything further round hidden. Each card's place is set by --offset, a
+   whole number of steps from the middle, so moving the ring only means
+   changing that number - see SideQuestScene.js.
+   ========================================================================== */
+
+.carousel {
+    text-shadow: none;
+    /* A fixed stage, so the cards can be positioned against it and the panel
+       does not change height as the ring turns. */
+    position: relative;
+    /* Centred in the room left below the heading. */
+    margin-block: auto;
+    height: min(48vh, 23rem);
+    /* The neighbours run past the edges on purpose; this is what trims them. */
+    overflow: hidden;
+}
+
+.carousel__ring {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.carousel__slot {
+    /* --step is a share of the card's own width, so the spacing scales with
+       the cards rather than needing a pixel figure per breakpoint. Close to
+       100% leaves the neighbours barely overlapping the middle card. */
+    --step: 84%;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    width: min(84%, 26rem);
+    /* Height follows the card's own content, centred on the stage, rather than
+       stretching to fill it and leaving the text stranded at the top. */
+    max-height: 100%;
+    transform:
+        translate(calc(-50% + var(--offset) * var(--step)), -50%)
+        scale(var(--scale));
+    transition:
+        transform 420ms cubic-bezier(0.22, 0.61, 0.36, 1),
+        opacity 420ms ease-out;
+}
+
+/* The card you are reading, brought forward. Scaling it rather than giving it
+   a larger width keeps the neighbours where they are - their step is a share
+   of the card's layout width, which a transform does not touch - so the middle
+   card grows over them instead of pushing them apart. */
+.carousel__slot[data-depth='0'] {
+    --scale: 1.2;
+
+    z-index: 3;
+    opacity: 1;
+}
+
+/* Its neighbours: set back and faded, and the controls for turning the ring.
+   Not faded too far: over a bright backdrop a dark card at low opacity stops
+   reading as a card and turns muddy, so it keeps enough body to look solid and
+   the scale is left to do most of the work of pushing it back. */
+.carousel__slot[data-depth='1'] {
+    --scale: 0.88;
+
+    z-index: 2;
+    opacity: 0.66;
+}
+
+.carousel__slot[data-depth='1']:hover,
+.carousel__slot[data-depth='1']:focus-within {
+    opacity: 0.85;
+}
+
+/* Everything further round. Kept in the document so it can travel in, but out
+   of reach: this is also where the wrap happens, and at zero opacity nobody
+   sees a card crossing the stage to come round the other side. */
+.carousel__slot[data-depth='2'] {
+    --scale: 0.76;
+
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Each card is an `nes-container is-rounded is-dark`, so its frame and its
+   dark ground come from NES.css. That also settles a problem the hand-rolled
+   card had: it needs to be opaque, because the neighbours sit partly behind
+   the middle one and through a translucent card their text showed through.
+
+   Only the box model is set here - the default container padding is generous
+   for a page section and too loose for a card this size. */
+.carousel__card {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 1rem 1.15rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* The whole neighbouring card is the target, so the label it carries for
+   assistive tech is clipped rather than laid out. */
+.carousel__grab {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    font: inherit;
+    color: transparent;
+    text-indent: 100%;
+    white-space: nowrap;
+    background: none;
+    border: 0;
+}
+
+.carousel__grab:focus-visible {
+    outline: 4px solid #f7d51d;
+    outline-offset: -4px;
+}
+
+.carousel__year {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    color: #f7d51d;
+}
+
+.carousel__title {
+    margin: 0 0 0.4rem;
+    font-size: clamp(0.6rem, 2.2vw, 0.72rem);
+    color: #fff;
+    overflow-wrap: anywhere;
+}
+
+.carousel__role {
+    margin: 0 0 0.3rem;
+    font-size: 1.05rem;
+    color: #92cc41;
+}
+
+.carousel__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.6rem;
+    margin: 0 0 0.15rem;
+    font-size: 0.95rem;
+    color: #d6d6e0;
+}
+
+.carousel__time {
+    color: #f7d51d;
+}
+
+.carousel__place {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    color: #b3b3c2;
+}
+
+.carousel__body {
+    margin: 0;
+    font-size: 1rem;
+    color: #f4f4f8;
+}
+
+/* medium (tablet) and up - room for more of the neighbours to show */
+@media (min-width: 768px) {
+    .carousel__slot {
+        --step: 86%;
+
+        width: min(64%, 27rem);
+    }
+}
+
+/* wide (desktop) */
+@media (min-width: 1024px) {
+    .carousel {
+        height: min(44vh, 22rem);
+    }
+
+    .carousel__slot {
+        --step: 88%;
+
+        width: min(46%, 30rem);
+    }
+}

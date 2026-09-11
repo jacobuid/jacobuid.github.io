@@ -1,0 +1,87 @@
+.start {
+    width: 100%;
+    text-align: center;
+}
+
+.start__prompt {
+    margin: 0 0 1.25rem;
+}
+
+.prompt-mark {
+    position: relative;
+    display: inline-block;
+    width: 5.5rem;
+    aspect-ratio: 24 / 18;
+    border: 4px solid #fff;
+}
+
+.prompt-mark__block,
+.prompt-mark__cursor {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.prompt-mark__cursor {
+    animation: blink 1s steps(2, end) infinite;
+}
+
+.start__name {
+    margin: 0 0 0.9rem;
+    font-size: clamp(1.2rem, 4.5vw, 2.6rem);
+    color: #fff;
+    text-shadow: 5px 5px 0 #a8306e;
+}
+
+.start__role {
+    margin: 0 0 1.75rem;
+    font-family: var(--font-display);
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: #92cc41;
+    text-shadow: 3px 3px 0 var(--ink);
+}
+
+.start__stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    list-style: none;
+}
+
+.start__stats > li {
+    /* flex-basis, not min-width: these must be able to shrink inside a narrow
+       column instead of forcing the block wider than its container. */
+    flex: 1 1 6rem;
+    min-width: 0;
+    padding: 0.65rem 0.5rem;
+    background-color: rgba(16, 16, 26, 0.72);
+    border: 4px solid #fff;
+}
+
+.start__stats-value {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: #f7d51d;
+}
+
+.start__stats-label {
+    display: block;
+    font-size: 0.95rem;
+    color: #d6d6e0;
+}
+
+/* Sits over the skyline silhouette, which is patchy behind small text. */
+.start__hint {
+    display: inline-block;
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    font-size: 1rem;
+    color: #d9d4f0;
+    background-color: rgba(16, 16, 26, 0.7);
+}

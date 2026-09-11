@@ -1,0 +1,441 @@
+/* ==========================================================================
+   Inventory, as a character sheet
+
+   Landscape rather than portrait: the scene is one viewport wide and one tall,
+   so the panels go in columns instead of a long scrolling stack. Phone gets a
+   single column; the tiers below widen it into a grid.
+   ========================================================================== */
+
+.sheet {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+    width: 100%;
+}
+
+/* On the stacked tiers the detail pane has no column to fill, so it is capped
+   rather than left to run as long as the prose. */
+.sheet__detail {
+    max-height: 12rem;
+}
+
+/* NES containers carry a generous section padding; at sheet scale, with five
+   of them on one screen, it has to come down. */
+.sheet__panel {
+    padding: 1rem 1.1rem;
+    margin: 0;
+}
+
+.sheet__panel > .title {
+    font-size: clamp(0.5rem, 2vw, 0.62rem);
+}
+
+/* --------------------------------------------------------------------------
+   Segmented meters
+
+   A plain fill with hard-edged gaps laid over it, so the bar is built out of
+   blocks like everything else. A gradient would read as a different medium.
+   -------------------------------------------------------------------------- */
+
+.meter {
+    position: relative;
+    display: block;
+    height: 14px;
+    overflow: hidden;
+    background-color: #10101a;
+    border: 3px solid rgba(244, 244, 248, 0.25);
+}
+
+.meter__fill {
+    display: block;
+    width: var(--fill, 0%);
+    height: 100%;
+    background-color: #92cc41;
+}
+
+.meter--hp .meter__fill {
+    background-color: #92cc41;
+}
+
+.meter--mp .meter__fill {
+    background-color: #209cee;
+}
+
+/* The gaps. Drawn over the fill, in the track colour, so the bar looks like a
+   row of cells rather than a continuous strip. */
+.meter::after {
+    position: absolute;
+    inset: 0;
+    content: '';
+    background-image: repeating-linear-gradient(
+        90deg,
+        transparent 0 8px,
+        #10101a 8px 11px
+    );
+}
+
+/* --------------------------------------------------------------------------
+   Character panel
+   -------------------------------------------------------------------------- */
+
+.sheet__name {
+    margin: 0 0 0.15rem;
+    font-family: var(--font-display);
+    font-size: clamp(0.7rem, 2.6vw, 0.9rem);
+    color: #f7d51d;
+}
+
+.sheet__class {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    color: #92cc41;
+}
+
+.sheet__vitals,
+.sheet__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.sheet__vital-label {
+    margin-bottom: 0.2rem;
+    font-family: var(--font-display);
+    font-size: 0.5rem;
+    color: #d6d6e0;
+    letter-spacing: 0.1em;
+}
+
+.sheet__vital-value,
+.sheet__stat-value {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.sheet__vital-value .meter,
+.sheet__stat-value .meter {
+    flex: 1;
+}
+
+.sheet__vital-number,
+.sheet__stat-number {
+    flex: 0 0 auto;
+    min-width: 3.4rem;
+    font-size: 0.9rem;
+    color: #f4f4f8;
+    text-align: right;
+}
+
+.sheet__stat-number {
+    min-width: 1.8rem;
+}
+
+/* --------------------------------------------------------------------------
+   Attributes
+   -------------------------------------------------------------------------- */
+
+.sheet__stat-label {
+    display: flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    margin-bottom: 0.15rem;
+    font-size: 0.95rem;
+    color: #f4f4f8;
+}
+
+.sheet__stat-abbr {
+    font-family: var(--font-display);
+    font-size: 0.45rem;
+    color: #f7d51d;
+    letter-spacing: 0.08em;
+}
+
+/* --------------------------------------------------------------------------
+   Status effects
+   -------------------------------------------------------------------------- */
+
+.sheet__status-head {
+    margin: 0 0 0.3rem;
+    font-family: var(--font-display);
+    font-size: 0.45rem;
+    letter-spacing: 0.1em;
+}
+
+.sheet__status-head--buff {
+    color: #92cc41;
+}
+
+.sheet__status-head--debuff {
+    margin-top: 0.85rem;
+    color: #e76e55;
+}
+
+.sheet__effects {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sheet__effect {
+    font-size: 0.92rem;
+}
+
+.sheet__effect--buff {
+    color: #d6d6e0;
+}
+
+.sheet__effect--debuff {
+    color: #f0a89c;
+}
+
+/* --------------------------------------------------------------------------
+   Skills and abilities
+   -------------------------------------------------------------------------- */
+
+.sheet__group {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.45rem;
+    color: #f7d51d;
+    letter-spacing: 0.1em;
+}
+
+.sheet__group:not(:first-of-type) {
+    margin-top: 0.75rem;
+}
+
+.sheet__ability-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* One line per ability, the whole row being the button: the description is no
+   longer on the row, so the list stays short enough that all six are in view
+   at once and the detail panel below has room. */
+.sheet__ability {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    padding: 0.25rem 0.45rem;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 3px solid transparent;
+    transition:
+        background-color 140ms ease-out,
+        border-color 140ms ease-out;
+}
+
+.sheet__ability:hover {
+    background-color: rgba(247, 213, 29, 0.12);
+}
+
+.sheet__ability:focus-visible {
+    border-color: #f7d51d;
+    outline: none;
+}
+
+/* The chosen one. aria-pressed is the state, so it is also the selector -
+   there is no second class to keep in step with it. */
+.sheet__ability[aria-pressed='true'] {
+    background-color: rgba(247, 213, 29, 0.18);
+    border-color: #f7d51d;
+}
+
+.sheet__ability-glyph {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    background-color: #209cee;
+    box-shadow: 0 0 0 3px #10101a;
+    transition: background-color 140ms ease-out;
+}
+
+.sheet__ability[aria-pressed='true'] .sheet__ability-glyph {
+    background-color: #f7d51d;
+}
+
+.sheet__ability-name {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.98rem;
+    color: #fff;
+}
+
+.sheet__ability-badge {
+    flex: 0 0 auto;
+    padding: 0.1rem 0.4rem;
+    font-family: var(--font-display);
+    font-size: 0.4rem;
+    color: #10101a;
+    letter-spacing: 0.06em;
+    background-color: #92cc41;
+}
+
+/* The description of whichever ability is chosen - the panel a game menu keeps
+   under its list. It scrolls rather than growing, so picking a longer write-up
+   cannot change the height of the sheet around it. */
+.sheet__detail {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 0.85rem;
+    padding: 0.6rem 0.7rem;
+    overflow-y: auto;
+    background-color: #10101a;
+    border: 3px solid rgba(244, 244, 248, 0.2);
+    scrollbar-width: thin;
+}
+
+.sheet__detail-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 0.5rem;
+    color: #f7d51d;
+}
+
+.sheet__detail-badge {
+    font-size: 0.4rem;
+    color: #92cc41;
+    letter-spacing: 0.06em;
+}
+
+.sheet__detail-body {
+    margin: 0;
+    font-size: 0.92rem;
+    line-height: 1.35;
+    color: #d6d6e0;
+}
+
+/* --------------------------------------------------------------------------
+   Equipment
+   -------------------------------------------------------------------------- */
+
+.sheet__slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Rarity is carried on the tile as a data attribute, so the colour is set in
+   one place per tier instead of per item. */
+.sheet__slot {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    padding: 0.35rem 0.5rem;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-left: 5px solid var(--rarity, #6b6b80);
+}
+
+.sheet__slot[data-rarity='common'] {
+    --rarity: #8d94a3;
+}
+
+.sheet__slot[data-rarity='rare'] {
+    --rarity: #209cee;
+}
+
+.sheet__slot[data-rarity='epic'] {
+    --rarity: #d68cf0;
+}
+
+.sheet__slot-kind {
+    font-family: var(--font-display);
+    font-size: 0.4rem;
+    color: #b3b3c2;
+    letter-spacing: 0.08em;
+}
+
+.sheet__slot-name {
+    font-size: 1rem;
+    color: #fff;
+}
+
+.sheet__slot-rarity {
+    font-family: var(--font-display);
+    font-size: 0.38rem;
+    color: var(--rarity);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* medium (tablet) - two columns, with the wide panels spanning both */
+@media (min-width: 768px) {
+    .sheet {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .sheet__abilities,
+    .sheet__equipment {
+        grid-column: 1 / -1;
+    }
+}
+
+/* wide (desktop) - the landscape sheet. Named areas rather than row and
+   column numbers: the point is that the abilities run the full height of the
+   sheet down the right while the left two columns stack, and areas say that
+   in a shape you can read.
+
+   The whole sheet has to fit one viewport - the panel can scroll, but a
+   character screen that needs scrolling is not a character screen. */
+@media (min-width: 1024px) {
+    .sheet {
+        grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr) minmax(0, 1.3fr);
+        grid-template-areas:
+            'who    attrs abilities'
+            'status attrs abilities'
+            'equip  equip abilities';
+        align-items: start;
+    }
+
+    .sheet__who {
+        grid-area: who;
+    }
+
+    .sheet__attributes {
+        grid-area: attrs;
+    }
+
+    .sheet__status {
+        grid-area: status;
+    }
+
+    .sheet__abilities {
+        display: flex;
+        flex-direction: column;
+        grid-area: abilities;
+        /* Bounded to the row it spans, so the detail pane inside it scrolls
+           instead of the sheet growing past the viewport. */
+        max-height: 100%;
+        align-self: stretch;
+    }
+
+    .sheet__abilities .sheet__detail {
+        flex: 1;
+        min-height: 6rem;
+    }
+
+    .sheet__equipment {
+        grid-area: equip;
+    }
+}

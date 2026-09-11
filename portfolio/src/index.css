@@ -1,13 +1,154 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+    --font-display: 'Press Start 2P', 'Courier New', monospace;
+    --font-body: 'VT323', 'Courier New', monospace;
+
+    --ink: #16161f;
+    --paper: #fdf6e3;
+    --hud: #10101a;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* ,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* NES.css swaps the pointer for pixel-art cursor images: on `html`, on every
+   link and button, on .nes-btn, and on its form controls. Browser defaults are
+   wanted instead - the arrow over the page, the hand over links only - so they
+   are handed back here. This sheet is imported after nes.css (see index.js), so
+   plain selectors are enough to win without raising specificity.
+
+   `auto` rather than `default`: it is the initial value, so the browser still
+   picks the I-beam over text where it should. */
+html,
+button,
+.nes-btn,
+.nes-pointer,
+.nes-radio + span,
+.nes-checkbox + span,
+.nes-select select {
+    cursor: auto;
+}
+
+/* The one deliberate change, and it only restores what the UA stylesheet
+   already does for links. */
+a {
+    cursor: pointer;
+}
+
+/* NES.css draws the speech balloon's tail with two pseudo-elements whose 4px
+   borders are meant to sit OUTSIDE a 26px white middle - 34px in all - and
+   whose stepped box-shadows are offset in fixed pixels against that geometry.
+   Under the border-box above the borders are pulled inward instead, squeezing
+   the middle to 18px, and the two halves of the tail no longer line up: its
+   left edge loses its black step. The tail is the one place NES depends on
+   content-box, so it is the one place that gets it back. */
+.nes-balloon::before,
+.nes-balloon::after {
+    box-sizing: content-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    /* NES.css puts Press Start 2P on body; readable at heading sizes, punishing
+       for paragraphs, so prose falls back to a second pixel face. */
+    font-family: var(--font-body);
+    /* The stage caps the panel width, so the body size can settle at 21px
+       rather than chasing the viewport. */
+    font-size: clamp(17px, 0.55vw + 14.8px, 21px);
+    line-height: 1.4;
+    color: var(--ink);
+    background-color: var(--hud);
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: unset;
+    text-rendering: optimizeSpeed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-display,
+.nes-btn,
+.nes-badge,
+.nes-container > .title {
+    font-family: var(--font-display);
+    font-weight: normal;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+}
+
+h1 {
+    font-size: clamp(1.05rem, 4.4vw, 1.5rem);
+    margin: 0 0 0.75rem;
+}
+
+h2 {
+    font-size: clamp(0.8rem, 3.2vw, 1.1rem);
+    margin: 0 0 0.75rem;
+}
+
+h3 {
+    font-size: clamp(0.62rem, 2.4vw, 0.85rem);
+    margin: 0 0 0.5rem;
+}
+
+p {
+    margin: 0 0 0.75rem;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 3px solid currentColor;
+}
+
+a:hover,
+a:focus-visible {
+    color: #d94b3a;
+}
+
+:focus-visible {
+    outline: 4px solid #f7d51d;
+    outline-offset: 3px;
+}
+
+img,
+svg {
+    max-width: 100%;
+}
+
+code,
+kbd,
+pre,
+samp {
+    font-family: var(--font-body);
+}
+
+/* Real vendor logos read as pixel art at small sizes with nearest-neighbour. */
+.pixelated {
+    image-rendering: pixelated;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
 }

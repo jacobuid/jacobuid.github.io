@@ -1,0 +1,1319 @@
+import PixelArt from '../PixelArt';
+
+/**
+ * A beige CRT workstation for the title scene: monitor, tower, keyboard and
+ * mouse. Each code line is its own layer so it can type in with a clip-path
+ * reveal, staggered by `--type-delay`. At 112 columns a glyph would be about
+ * one pixel wide, so the code is coloured bars carrying the real indentation
+ * rather than illegible lettering.
+ */
+const COLUMNS = 112;
+const ROWS = 88;
+
+const PALETTE = {
+    k: '#2a2622',
+    K: '#14120f',
+    c: '#ded3ba',
+    C: '#b8ac91',
+    h: '#f2ebd8',
+    s: '#12140f',
+    b: '#2438b8',
+    w: '#eef1ff',
+    g: '#4ee07a',
+    t: '#4ed8e0',
+    n: '#b3ab96',
+    N: '#8b8474',
+    p: '#3ad14a'
+};
+
+const MACHINE = `
+.
+.
+..hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hcccccccccccccccccccccccccccccCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKbwwwwwwwwwwwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbKcccccCC....hccckkkkkkkkkkkkkkkkccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccckKkCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccckKkCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccccccccccccccccccccccccccccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccKKKKKKKKKKKKKKKKccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccKKKKKKKKKKKKKKKKccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccKKKKKKKKKKKKKKKKccccCccCC
+..hccccKssssssssssssssssssssssssssssssssssssssssssssssssssssssssKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbKcccccCC....hcccCckKkcccccccccccckkkkccCccCC
+..hccccKbwwwwwwwwwwwwbbbbbbbbbbbbbbbbbbbbbbbbbbwwwwwwwwwwwwwwwwbKcccccCC....hcccCccccccccccccccccccccccCccCC
+..hccccKbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbKcccccCC....hcccCCCCCCCCCCCCCCCCCCCCCCCCccCC
+..hccccKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKcccccCC....hcccccccccccccccccccccccccccccCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hcccccccccccccccccccccccccccccCC
+..hccccccccccccccccccccccccccccccccccccccccccccccccccccccccccckKKKkcccCC....hcccccccccccccccccccccccccccccCC
+..hcccccccCCCCCCCCCCCCCCCCCCccccccccccccccccccccccccccCCCCCcccccccccccCC....hcccccccccccccccccccccccccccccCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hcccccccccccccccccCCCCCCCCccccCC
+..hcccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccCC....hcccccccccccccccccChhhhhhCccccCC
+..hCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC....hcccccccccccccccccChhhhhhCccccCC
+..hCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC....hcccccccccccccccccChhKKhhCccccCC
+..........................CCCCCCCCCCCCCCCCCCCC..............................hcccccccccccccccccChhhhhhCccccCC
+..........................CCCCCCCCCCCCCCCCCCCC..............................hcccccccccccccccccChhhhhhCccccCC
+..........................CCCCCCCCCCCCCCCCCCCC..............................hcccccccccccccccccChhhhhhCccccCC
+..........................CCCCCCCCCCCCCCCCCCCC..............................hcccccccccccccccccCCCCCkCCccccCC
+..................cccccccccccccccccccccccccccccccccccc......................hcccccccccccccccccccccccccccccCC
+..................cccccccccccccccccccccccccccccccccccc......................hccccccccccccccccckkkkkkkkccccCC
+..................cccccccccccccccccccccccccccccccccccc......................CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+..................CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC......................CCCCCCCCCCCCCCCCCCCCCCCkCCCCCCCC
+.
+..................................................................................................k
+......hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+......cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.....................k
+......cccnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnnnnncnnncnnnccc
+......cccnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnnnnncnnncnnnccc....................k
+......cccNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNNNNcNNNcNNNccc......cccccccccccccc
+......cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc......chhhhhCChhhhhc
+......cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc......chhhhhhhhhhhhc
+......cccnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnnnnncnnncnnnccc......chhhhhhhhhhhhc
+......cccnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnncnnnnnncnnncnnnccc......chhhhhhhhhhhhc
+......cccNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNcNNNNNNcNNNcNNNccc......cccccccccccccc
+......cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc......cccccccccccccc
+......cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc......cccccccccccccc
+......cccnnncnnncnnncnnncnnnnnnnnnnnnnnnnnnnnnnnnnnncnnncnnncnnnnnncnnncnnnccc......cccccccccccccc
+......cccnnncnnncnnncnnncnnnnnnnnnnnnnnnnnnnnnnnnnnncnnncnnncnnnnnncnnncnnnccc......cccccccccccccc
+......CCCNNNCNNNCNNNCNNNCNNNNNNNNNNNNNNNNNNNNNNNNNNNCNNNCNNNCNNNNNNCNNNCNNNCCC......CCCCCCCCCCCCCC
+......CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC......CCCCCCCCCCCCCC
+.
+.
+.
+.
+`;
+
+const CODE_0 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..........tttttttttttttttttttttttttt
+..........tttttttttttttttttttttttttt
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_1 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..........gggggggggggggggggggg
+..........gggggggggggggggggggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_2 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..........gggggggggggggggg
+..........gggggggggggggggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_3 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..............gggggggggggggggggggggggggggggg
+..............gggggggggggggggggggggggggggggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_4 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..............gggggggggggggggggggggggggggggggg
+..............gggggggggggggggggggggggggggggggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_5 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..............gggggggggggg
+..............gggggggggggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_6 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+..........ggg
+..........ggg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_7 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+...........tttttttttttttttttt
+...........tttttttttttttttttt
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CODE_8 = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+...........tttttttttttttttttttttttt
+...........tttttttttttttttttttttttt
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const LEDS = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.....................................................................................................p
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.....................................................................................................p
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+...................................................................................p
+.
+.
+.
+.
+...............................................................ppp
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const POWER = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.................................................................................................pp
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+const CURSOR = `
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+...........gg
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+`;
+
+function WorkstationSprite() {
+    return (
+        <div className="sprite" style={{ '--sprite-aspect': `${COLUMNS} / ${ROWS}` }}>
+            <PixelArt
+                className="sprite__layer"
+                art={MACHINE}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '0.00s' }}
+                art={CODE_0}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '0.42s' }}
+                art={CODE_1}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '0.84s' }}
+                art={CODE_2}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '1.26s' }}
+                art={CODE_3}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '1.68s' }}
+                art={CODE_4}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '2.10s' }}
+                art={CODE_5}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '2.52s' }}
+                art={CODE_6}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '2.94s' }}
+                art={CODE_7}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--type"
+                style={{ '--type-delay': '3.36s' }}
+                art={CODE_8}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--led"
+                art={LEDS}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--power"
+                art={POWER}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+            <PixelArt
+                className="sprite__layer sprite__layer--caret"
+                art={CURSOR}
+                palette={PALETTE}
+                columns={COLUMNS}
+                rows={ROWS}
+            />
+        </div>
+    );
+}
+
+export default WorkstationSprite;

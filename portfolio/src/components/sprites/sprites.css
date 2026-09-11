@@ -1,0 +1,311 @@
+.sprite {
+    position: relative;
+    /* Fills the flex item it sits in, so it scales with the container. The cap
+       applies only while stacked, where the panel needs the vertical room. */
+    /* Sized from the height budget so it gives way on short viewports; the
+       aspect ratio derives the width. */
+    width: auto;
+    height: min(26vh, 20rem);
+    max-width: 100%;
+    /* Overridden per sprite by --sprite-aspect for other canvases. */
+    aspect-ratio: var(--sprite-aspect, 40 / 28);
+    filter: drop-shadow(0 8px 0 rgba(22, 22, 31, 0.25));
+}
+
+/* wide (desktop) - on story scenes the sprite has its own half of the row, so
+   let it fill that. Grid scenes stay one column, where an uncapped sprite
+   would be as wide as the whole container. */
+@media (min-width: 1024px) {
+    .scene--story .sprite {
+        width: 100%;
+        height: auto;
+        max-width: none;
+        max-height: 58vh;
+    }
+}
+
+.sprite__layer {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Flags and banners: a two-frame wave, held on steps so it reads as pixel
+   animation rather than a smooth tween. */
+.sprite__layer--flag {
+    transform-origin: 52% 4%;
+    animation: sprite-wave 0.9s steps(1, end) infinite;
+}
+
+@keyframes sprite-wave {
+    0%,
+    100% {
+        transform: skewY(0deg) translateX(0);
+    }
+    50% {
+        transform: skewY(-6deg) translateX(-2%);
+    }
+}
+
+/* Code lines typing in, one after another, then clearing and repeating.
+   clip-path in steps() reveals whole characters rather than sliding smoothly. */
+.sprite__layer--type {
+    clip-path: inset(0 100% 0 0);
+    animation: sprite-type 8s steps(18, end) infinite;
+    animation-delay: var(--type-delay, 0s);
+}
+
+@keyframes sprite-type {
+    0%,
+    3% {
+        clip-path: inset(0 100% 0 0);
+    }
+    22%,
+    90% {
+        clip-path: inset(0 0 0 0);
+    }
+    94%,
+    100% {
+        clip-path: inset(0 100% 0 0);
+    }
+}
+
+/* Signal arcs pulsing outward: inner first, then out, like a wifi indicator. */
+.sprite__layer--signal {
+    animation: sprite-signal 1.8s steps(1, end) infinite;
+    animation-delay: var(--signal-delay, 0s);
+}
+
+@keyframes sprite-signal {
+    0%,
+    38% {
+        opacity: 1;
+    }
+    40%,
+    100% {
+        opacity: 0.18;
+    }
+}
+
+/* A slow breath on a logo. transform-origin comes from the sprite as
+   --mark-origin, computed from the mark's own bounding box, so it scales about
+   its own centre rather than the canvas's. */
+.sprite__layer--breathe {
+    transform-origin: var(--mark-origin, 50% 50%);
+    animation: sprite-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes sprite-breathe {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.055);
+    }
+}
+
+/* Terminal caret. */
+.sprite__layer--caret {
+    animation: blink 1.06s steps(2, end) infinite;
+}
+
+/* Drive activity: quick, irregular. */
+.sprite__layer--led {
+    animation: sprite-led 2.4s steps(1, end) infinite;
+}
+
+@keyframes sprite-led {
+    0%,
+    12% {
+        opacity: 1;
+    }
+    14%,
+    46% {
+        opacity: 0.15;
+    }
+    48%,
+    54% {
+        opacity: 1;
+    }
+    56%,
+    100% {
+        opacity: 0.15;
+    }
+}
+
+/* Power light: a slow, steady pulse. */
+.sprite__layer--power {
+    animation: sprite-power 2s ease-in-out infinite;
+}
+
+@keyframes sprite-power {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* School bell, swinging in its arch. */
+.sprite__layer--bell {
+    transform-origin: 50% 24%;
+    animation: sprite-bell 1.8s steps(2, end) infinite alternate;
+}
+
+@keyframes sprite-bell {
+    from {
+        transform: rotate(-7deg);
+    }
+    to {
+        transform: rotate(7deg);
+    }
+}
+
+/* Lit windows flicker on a long, uneven cycle so scenes never look static. */
+.sprite__layer--windows {
+    animation: sprite-flicker 4.2s steps(1, end) infinite;
+}
+
+.sprite__layer--windows-alt {
+    animation: sprite-flicker 4.2s steps(1, end) infinite;
+    animation-delay: 2.1s;
+}
+
+/* A glow over the glass, not a repaint of it - hence the low ceiling. */
+@keyframes sprite-flicker {
+    0%,
+    45% {
+        opacity: 0.6;
+    }
+    50%,
+    100% {
+        opacity: 0.12;
+    }
+}
+
+/* Screens: scanline glow pulse. */
+.sprite__layer--screen {
+    animation: sprite-screen 1.6s steps(2, end) infinite;
+}
+
+@keyframes sprite-screen {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.55;
+    }
+}
+
+/* Hearts, coins, anything that should feel alive: a chunky 3-frame bob. */
+.sprite__layer--bob {
+    animation: sprite-bob 1.4s steps(3, end) infinite alternate;
+}
+
+@keyframes sprite-bob {
+    from {
+        transform: translateY(1.5%);
+    }
+    to {
+        transform: translateY(-3.5%);
+    }
+}
+
+.sprite__layer--pulse {
+    transform-origin: 50% 50%;
+    animation: sprite-pulse 1.1s steps(2, end) infinite alternate;
+}
+
+@keyframes sprite-pulse {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.09);
+    }
+}
+
+/* Smoke, steam and torch flame all drift up and fade. */
+.sprite__layer--smoke {
+    animation: sprite-smoke 2.6s steps(4, end) infinite;
+}
+
+@keyframes sprite-smoke {
+    0% {
+        opacity: 0;
+        transform: translateY(6%);
+    }
+    35% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-12%);
+    }
+}
+
+/* Component blocks snapping into place - the USAA library, literally. */
+.sprite__layer--assemble {
+    animation: sprite-assemble 3.4s steps(4, end) infinite;
+}
+
+@keyframes sprite-assemble {
+    0%,
+    12% {
+        opacity: 0;
+        transform: translateY(-22%);
+    }
+    30%,
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sprite__layer--assemble-late {
+    animation: sprite-assemble 3.4s steps(4, end) infinite;
+    animation-delay: 0.75s;
+}
+
+/* Shine sweep across metal and glass. */
+.sprite__layer--shine {
+    animation: sprite-shine 3s steps(5, end) infinite;
+}
+
+@keyframes sprite-shine {
+    0%,
+    70% {
+        opacity: 0;
+    }
+    80% {
+        opacity: 0.85;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Play-state must come AFTER every `animation:` shorthand above: the
+   shorthand resets animation-play-state to `running`, so declaring the pause
+   earlier in the file has no effect. Only on-screen scenes animate - without
+   this, all thirteen scenes composite at once. */
+.sprite__layer {
+    animation-play-state: paused;
+}
+
+.scene.is-onscreen .sprite__layer {
+    animation-play-state: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sprite__layer {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}

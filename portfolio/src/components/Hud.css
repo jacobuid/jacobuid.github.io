@@ -1,0 +1,52 @@
+.hud {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.hud__bar {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 0.85rem;
+    background-color: rgba(16, 16, 26, 0.92);
+    border-bottom: 4px solid var(--ink);
+}
+
+/* The same mark the start screen opens with, at bar scale - so the header and
+   the first thing you see share an identity. */
+.hud__mark {
+    display: inline-flex;
+    flex: 0 0 auto;
+}
+
+.hud__mark .prompt-mark {
+    width: 2rem;
+    border-width: 3px;
+}
+
+/* An arcade logotype: a hard offset shadow, no blur, so it reads as drawn on
+   the same grid as everything else. */
+.hud__brand {
+    flex: 1;
+    font-family: var(--font-display);
+    font-size: clamp(0.6rem, 2.4vw, 0.85rem);
+    color: #f7d51d;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    text-shadow: 3px 3px 0 #e8425f;
+}
+
+.hud__nav {
+    display: flex;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+.hud__nav a {
+    display: inline-flex;
+    border-bottom: none;
+}

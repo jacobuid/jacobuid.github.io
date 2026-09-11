@@ -1,0 +1,180 @@
+/* ==========================================================================
+   Scene rail - the fixed timeline down the left edge.
+
+   Hidden on phones, where there is no room beside a full-width panel and the
+   HUD already reports which scene you are on. From the tablet tier up it is
+   shown, and .scene__inner is padded by --rail-inset so the rail never lands
+   on the content - see App.css.
+   ========================================================================== */
+
+.rail {
+    display: none;
+}
+
+/* medium (tablet) and up */
+@media (min-width: 768px) {
+    .rail {
+        position: fixed;
+        top: 50%;
+        left: 0;
+        z-index: 40;
+        display: block;
+        /* Centred on the viewport rather than pinned, so the column of stops
+           stays put while the scenes move behind it. */
+        transform: translateY(-50%);
+        transition: opacity 500ms ease-out;
+    }
+
+    /* Dimmed after a spell with no pointer on it - see IDLE_AFTER in
+       SceneRail.js. It is navigation, not content, so it should not hold the
+       eye while a scene is being read. */
+    .rail--idle {
+        opacity: 0.5;
+    }
+
+    .rail__track {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        /* The rail should read as spanning the scene, not huddling at its
+           middle, so the gap is most of its height. Capped in vh as well as
+           rem so twelve stops still clear a short laptop viewport: at 600px
+           tall this comes to about 545px. */
+        gap: min(3.5vh, 2rem);
+        margin: 0;
+        padding: 0.75rem 0;
+        list-style: none;
+    }
+
+    /* The spine. Sits behind the markers and stops short at both ends, so the
+       line reads as joining the stops rather than running past them. */
+    .rail__track::before {
+        position: absolute;
+        top: 0.75rem;
+        bottom: 0.75rem;
+        left: calc(var(--rail-gutter) + var(--rail-marker) / 2 - 2px);
+        content: '';
+        width: 4px;
+        background-color: rgba(244, 244, 248, 0.5);
+    }
+
+    .rail__stop {
+        display: flex;
+    }
+
+    .rail__button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.25rem var(--rail-gutter);
+        font: inherit;
+        color: inherit;
+        background: none;
+        border: 0;
+        }
+
+    /* A square, not a dot - the rest of the page is drawn on a pixel grid. */
+    .rail__marker {
+        flex: 0 0 auto;
+        width: var(--rail-marker);
+        height: var(--rail-marker);
+        background-color: #10101a;
+        box-shadow: 0 0 0 4px rgba(244, 244, 248, 0.55);
+        transition:
+            background-color 160ms ease-out,
+            box-shadow 160ms ease-out,
+            transform 160ms ease-out;
+    }
+
+    .rail__button:hover .rail__marker,
+    .rail__button:focus-visible .rail__marker {
+        background-color: #f7d51d;
+        box-shadow: 0 0 0 4px #f7d51d;
+        transform: scale(1.35);
+    }
+
+    /* The scene you are on: filled in the same green the panels use for a
+       heading, and left slightly larger so it is findable at a glance. */
+    .rail__button[aria-current] .rail__marker {
+        background-color: #92cc41;
+        box-shadow: 0 0 0 4px #92cc41;
+        transform: scale(1.2);
+    }
+
+    .rail__button[aria-current]:hover .rail__marker,
+    .rail__button[aria-current]:focus-visible .rail__marker {
+        transform: scale(1.45);
+    }
+
+    /* The button's own focus ring is suppressed. It frames the whole button
+       box, which is wider and taller than the marker inside it, so on click it
+       painted as a stray rectangle sitting off the dot. Focus is not lost with
+       it: the rules above already light the marker and open its label, which
+       is a clearer indicator than a ring around an invisible box.
+
+       Only the ring goes - the element stays focusable and reachable by tab. */
+    .rail__button:focus {
+        outline: none;
+    }
+
+    /* Keyboard focus, though, should not look identical to a hover, so it
+       takes a second ring outside the first. After the rules above, and after
+       [aria-current], so it wins at equal specificity on source order. */
+    .rail__button:focus-visible .rail__marker {
+        box-shadow:
+            0 0 0 4px #f7d51d,
+            0 0 0 8px rgba(16, 16, 26, 0.9);
+    }
+
+    /* The writing. Taken out of the flow deliberately: in it, every button's
+       box would be as wide as its label and the rail would put a 200px strip
+       of hit area over the panel beside it. Absolute keeps each button the
+       size of its marker, and pointer-events: none means the label itself
+       never swallows a click meant for the scene.
+
+       Out of the way until pointed at: it slides in from the left and fades up
+       together, which reads as one movement rather than two. `visibility`
+       rides along so it is skipped by the tab order while invisible. */
+    .rail__flyout {
+        position: absolute;
+        top: 50%;
+        left: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+        padding: 0.4rem 0.7rem;
+        text-align: left;
+        white-space: nowrap;
+        pointer-events: none;
+        background-color: rgba(16, 16, 26, 0.92);
+        border: 3px solid rgba(244, 244, 248, 0.55);
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-0.5rem, -50%);
+        transition:
+            opacity 180ms ease-out,
+            transform 180ms ease-out,
+            visibility 180ms;
+    }
+
+    .rail__button:hover .rail__flyout,
+    .rail__button:focus-visible .rail__flyout {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(0, -50%);
+    }
+
+    .rail__tag {
+        font-family: var(--font-display);
+        font-size: 0.5rem;
+        color: #f7d51d;
+        letter-spacing: 0.12em;
+    }
+
+    .rail__name {
+        font-size: 0.95rem;
+        line-height: 1.2;
+        color: #f4f4f8;
+    }
+}

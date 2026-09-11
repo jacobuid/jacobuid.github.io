@@ -1,62 +1,1048 @@
-.App {}
-.float-right { float: right; max-width: 100%; }
-.float-left { float: left; max-width: 100%; }
-.clear-both { clear: both; }
-.clear-right { clear: right; }
-.clear-left { clear: left; }
-.clearfix { display: flow-root; }
-.absolute { position: absolute; }
-.relative { position: relative; }
-.hidden { display: none; }
-.visible { display: block; }
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.text-left { text-align: left; }
-.text-justify { text-align: justify; }
-.text-uppercase { text-transform: uppercase; }
-.text-lowercase { text-transform: lowercase; }
-.text-capitalize { text-transform: capitalize; }
+/* ==========================================================================
+   Breakpoints - three tiers, used verbatim in every stylesheet in this app.
+   Widths stay fluid inside each tier (clamp / min() / vw), the tiers only
+   change how many columns there are and whether scenes stack.
 
-header,nav,section,footer { padding: 10px }
+     narrow  (phone)    base, mobile-first  - 1 column, scene stacks
+     medium  (tablet)   >= 768px            - 2 columns, scene stacks
+     wide    (desktop)  >= 1024px           - 3 columns, scene goes side-by-side
+   ========================================================================== */
 
-header { position: relative; overflow: hidden; text-align: center; color: #fff; text-shadow: 1px 1px 4px rgba(0, 0, 0, .6); }
-header video { position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -100; transform: translateX(-50%) translateY(-50%); background-color: #222; background-size: cover; transition: 1s opacity; }
-header .scrim { position: absolute; top: 0; right:0; bottom: 0; left:0; background-color: rgba(0, 0, 0, .7); z-index: -90; }
-    header nav { float: right; }
-    header nav a { color: #fff; margin:0 10px }
-    header #intro{ margin: 80px 0 40px; }
-    header #header-logo{ max-width: 400px; width:80%; margin:40px 0 80px; }
+/* ==========================================================================
+   Shapes and sprites shared across scenes
+   ========================================================================== */
 
-.h1{ margin:1rem 0; padding: 1rem; background: black; color: white; font-family: 'Courier New', Courier, monospace; }
- .h1 .svg-inline--fa { padding-right: .5rem; }
-/* Mobile-first: sections stack vertically */
-.grid-container { margin: 1rem; display: flex; flex-direction: column; gap: 1rem; }
-    .grid-section { display:flow-root; padding: 1.5rem; border-radius: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
-        .grid-section h2{ margin-top:0; }
-        .grid-section h2 .svg-inline--fa { padding-right: .5rem; }
-        .grid-section p { margin-bottom: 0; }
+.app {
+    /* One ordinary centred container. Fluid below --container, fixed and
+       centred above it. The backdrop layers ignore it entirely and tile
+       full-bleed, which is what sells the endless world. */
+    --container: 1200px;
+    --gutter: clamp(1rem, 3vw, 2rem);
 
-        .svg-inline--fa.fa-code { color: #4CAF50; }
-        .svg-inline--fa.fa-js{ color: #F7DF1E; }
-        .svg-inline--fa.fa-sun{ color: #4444FF; }
-        .svg-inline--fa.fa-cloud-bolt{ color: red; }
-        .svg-inline--fa.fa-desktop{ color: gray; }
-        .svg-inline--fa.fa-html5{ color: #e44d26; }
-    
-    /* Animation for sections */
-    .grid-section { opacity: 0; transform: scale(0.95); transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);}
-    .grid-section.visible { opacity: 1; transform: scale(1);}
+    /* The scene rail's own metrics, kept here because the layout has to make
+       room for it - see --rail-inset below and SceneRail.css. */
+    --rail-marker: 16px;
+    --rail-gutter: 0.9rem;
 
-    .grid-section img { max-width: 100%; height: auto; }
-    .grid-section .svg-right { width: 70px; position: absolute; right: -30px; bottom: -20px; }
+    /* Silhouette tiles, both 160x96 so one mask-size fits either. They are
+       masks, not backgrounds, so each scene still colours its own ridge with
+       var(--ridge). shape-rendering keeps the steps hard at any scale. */
+    --tile-hills: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96' shape-rendering='crispEdges'%3E%3Crect x='0' y='56' width='20' height='40' fill='%23fff'/%3E%3Crect x='20' y='40' width='20' height='56' fill='%23fff'/%3E%3Crect x='40' y='24' width='24' height='72' fill='%23fff'/%3E%3Crect x='64' y='36' width='20' height='60' fill='%23fff'/%3E%3Crect x='84' y='52' width='24' height='44' fill='%23fff'/%3E%3Crect x='108' y='38' width='20' height='58' fill='%23fff'/%3E%3Crect x='128' y='22' width='20' height='74' fill='%23fff'/%3E%3Crect x='148' y='46' width='12' height='50' fill='%23fff'/%3E%3C/svg%3E");
+    --tile-downtown: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120' shape-rendering='crispEdges'%3E%3Crect x='0' y='74' width='16' height='46' fill='%23fff'/%3E%3Crect x='16' y='46' width='10' height='74' fill='%23fff'/%3E%3Crect x='26' y='62' width='14' height='58' fill='%23fff'/%3E%3Crect x='40' y='28' width='18' height='92' fill='%23fff'/%3E%3Crect x='58' y='54' width='12' height='66' fill='%23fff'/%3E%3Crect x='70' y='16' width='16' height='104' fill='%23fff'/%3E%3Crect x='86' y='66' width='10' height='54' fill='%23fff'/%3E%3Crect x='96' y='36' width='20' height='84' fill='%23fff'/%3E%3Crect x='116' y='50' width='12' height='70' fill='%23fff'/%3E%3Crect x='128' y='24' width='16' height='96' fill='%23fff'/%3E%3Crect x='144' y='60' width='10' height='60' fill='%23fff'/%3E%3Crect x='154' y='42' width='18' height='78' fill='%23fff'/%3E%3Crect x='172' y='70' width='12' height='50' fill='%23fff'/%3E%3Crect x='184' y='32' width='16' height='88' fill='%23fff'/%3E%3C/svg%3E");
+    --tile-windows: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120' shape-rendering='crispEdges'%3E%3Crect x='3' y='80' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='3' y='89' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='9' y='89' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='9' y='98' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='3' y='107' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='9' y='107' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='19' y='52' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='19' y='88' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='19' y='97' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='19' y='106' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='29' y='68' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='29' y='77' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='29' y='86' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='35' y='86' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='29' y='95' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='35' y='95' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='35' y='104' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='43' y='34' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='43' y='52' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='49' y='52' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='49' y='61' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='43' y='70' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='43' y='88' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='49' y='97' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='49' y='106' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='61' y='60' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='61' y='96' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='22' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='79' y='22' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='31' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='79' y='31' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='40' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='79' y='40' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='67' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='79' y='67' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='79' y='76' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='85' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='79' y='85' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='73' y='94' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='79' y='94' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='89' y='90' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='105' y='42' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='111' y='42' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='51' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='105' y='51' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='111' y='51' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='60' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='105' y='60' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='111' y='60' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='105' y='69' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='111' y='69' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='78' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='111' y='78' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='87' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='105' y='87' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='96' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='99' y='105' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='105' y='105' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='119' y='74' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='119' y='83' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='119' y='110' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='131' y='57' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='137' y='57' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='131' y='66' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='137' y='66' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='137' y='75' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='131' y='93' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='137' y='93' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='131' y='102' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='137' y='111' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='147' y='75' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='147' y='111' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='163' y='48' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='163' y='57' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='157' y='75' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='163' y='75' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='163' y='84' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='157' y='102' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='163' y='102' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='175' y='94' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='175' y='112' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='187' y='38' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='187' y='47' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='193' y='47' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='187' y='56' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='193' y='65' width='2' height='3' fill='%23ffe9b8'/%3E%3Crect x='193' y='83' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='187' y='92' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='187' y='101' width='2' height='3' fill='%23ffd27a'/%3E%3Crect x='193' y='110' width='2' height='3' fill='%23ffd27a'/%3E%3C/svg%3E");
+    --tile-water: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='64' shape-rendering='crispEdges'%3E%3Crect x='2' y='18' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='2' y='24' width='7' height='2' fill='%23f2a63c'/%3E%3Crect x='2' y='36' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='2' y='42' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='12' y='12' width='5' height='2' fill='%23e8913a'/%3E%3Crect x='12' y='30' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='12' y='36' width='5' height='2' fill='%23ffc76b'/%3E%3Crect x='12' y='42' width='3' height='2' fill='%23e8913a'/%3E%3Crect x='12' y='54' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='19' y='12' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='19' y='24' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='19' y='36' width='3' height='2' fill='%23e8913a'/%3E%3Crect x='19' y='42' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='19' y='48' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='19' y='54' width='7' height='2' fill='%23f2a63c'/%3E%3Crect x='19' y='60' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='31' y='6' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='31' y='24' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='31' y='30' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='31' y='42' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='41' y='0' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='41' y='12' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='41' y='24' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='41' y='48' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='41' y='54' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='41' y='60' width='5' height='2' fill='%23e8913a'/%3E%3Crect x='50' y='6' width='3' height='2' fill='%23e8913a'/%3E%3Crect x='50' y='24' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='50' y='48' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='50' y='60' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='58' y='0' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='58' y='12' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='58' y='24' width='5' height='2' fill='%23e8913a'/%3E%3Crect x='58' y='54' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='58' y='60' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='69' y='0' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='69' y='12' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='69' y='30' width='5' height='2' fill='%23e8913a'/%3E%3Crect x='69' y='48' width='7' height='2' fill='%23f2a63c'/%3E%3Crect x='69' y='54' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='69' y='60' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='80' y='0' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='80' y='6' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='12' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='18' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='24' width='3' height='2' fill='%23e8913a'/%3E%3Crect x='80' y='30' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='36' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='42' width='5' height='2' fill='%23f2a63c'/%3E%3Crect x='80' y='48' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='80' y='54' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='89' y='18' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='89' y='30' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='89' y='42' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='99' y='24' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='99' y='54' width='3' height='2' fill='%23f2a63c'/%3E%3Crect x='108' y='0' width='7' height='2' fill='%23ffc76b'/%3E%3Crect x='108' y='6' width='7' height='2' fill='%23f2a63c'/%3E%3Crect x='108' y='18' width='3' height='2' fill='%23ffc76b'/%3E%3Crect x='108' y='30' width='7' height='2' fill='%23e8913a'/%3E%3Crect x='108' y='36' width='3' height='2' fill='%23e8913a'/%3E%3C/svg%3E");
+    --arch-stlouis: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='112' shape-rendering='crispEdges'%3E%3Crect x='0' y='111' width='1' height='1' fill='%23fff'/%3E%3Crect x='1' y='106' width='1' height='6' fill='%23fff'/%3E%3Crect x='2' y='100' width='1' height='12' fill='%23fff'/%3E%3Crect x='3' y='95' width='1' height='17' fill='%23fff'/%3E%3Crect x='4' y='90' width='1' height='22' fill='%23fff'/%3E%3Crect x='5' y='86' width='1' height='26' fill='%23fff'/%3E%3Crect x='6' y='82' width='1' height='30' fill='%23fff'/%3E%3Crect x='7' y='77' width='1' height='35' fill='%23fff'/%3E%3Crect x='8' y='73' width='1' height='39' fill='%23fff'/%3E%3Crect x='9' y='70' width='1' height='42' fill='%23fff'/%3E%3Crect x='10' y='66' width='1' height='8' fill='%23fff'/%3E%3Crect x='11' y='63' width='1' height='8' fill='%23fff'/%3E%3Crect x='12' y='59' width='1' height='8' fill='%23fff'/%3E%3Crect x='13' y='56' width='1' height='8' fill='%23fff'/%3E%3Crect x='14' y='53' width='1' height='7' fill='%23fff'/%3E%3Crect x='15' y='50' width='1' height='7' fill='%23fff'/%3E%3Crect x='16' y='47' width='1' height='7' fill='%23fff'/%3E%3Crect x='17' y='45' width='1' height='7' fill='%23fff'/%3E%3Crect x='18' y='42' width='1' height='7' fill='%23fff'/%3E%3Crect x='19' y='40' width='1' height='7' fill='%23fff'/%3E%3Crect x='20' y='38' width='1' height='7' fill='%23fff'/%3E%3Crect x='21' y='36' width='1' height='7' fill='%23fff'/%3E%3Crect x='22' y='33' width='1' height='7' fill='%23fff'/%3E%3Crect x='23' y='32' width='1' height='7' fill='%23fff'/%3E%3Crect x='24' y='30' width='1' height='7' fill='%23fff'/%3E%3Crect x='25' y='28' width='1' height='7' fill='%23fff'/%3E%3Crect x='26' y='26' width='1' height='6' fill='%23fff'/%3E%3Crect x='27' y='25' width='1' height='6' fill='%23fff'/%3E%3Crect x='28' y='23' width='1' height='6' fill='%23fff'/%3E%3Crect x='29' y='21' width='1' height='6' fill='%23fff'/%3E%3Crect x='30' y='20' width='1' height='6' fill='%23fff'/%3E%3Crect x='31' y='19' width='1' height='6' fill='%23fff'/%3E%3Crect x='32' y='17' width='1' height='6' fill='%23fff'/%3E%3Crect x='33' y='16' width='1' height='6' fill='%23fff'/%3E%3Crect x='34' y='15' width='1' height='6' fill='%23fff'/%3E%3Crect x='35' y='14' width='1' height='6' fill='%23fff'/%3E%3Crect x='36' y='13' width='1' height='6' fill='%23fff'/%3E%3Crect x='37' y='12' width='1' height='6' fill='%23fff'/%3E%3Crect x='38' y='11' width='1' height='6' fill='%23fff'/%3E%3Crect x='39' y='10' width='1' height='6' fill='%23fff'/%3E%3Crect x='40' y='9' width='2' height='6' fill='%23fff'/%3E%3Crect x='42' y='8' width='1' height='6' fill='%23fff'/%3E%3Crect x='43' y='7' width='1' height='5' fill='%23fff'/%3E%3Crect x='44' y='6' width='2' height='5' fill='%23fff'/%3E%3Crect x='46' y='5' width='2' height='5' fill='%23fff'/%3E%3Crect x='48' y='4' width='2' height='5' fill='%23fff'/%3E%3Crect x='50' y='3' width='2' height='5' fill='%23fff'/%3E%3Crect x='52' y='2' width='3' height='5' fill='%23fff'/%3E%3Crect x='55' y='1' width='5' height='5' fill='%23fff'/%3E%3Crect x='60' y='0' width='12' height='5' fill='%23fff'/%3E%3Crect x='72' y='1' width='5' height='5' fill='%23fff'/%3E%3Crect x='77' y='2' width='3' height='5' fill='%23fff'/%3E%3Crect x='80' y='3' width='2' height='5' fill='%23fff'/%3E%3Crect x='82' y='4' width='2' height='5' fill='%23fff'/%3E%3Crect x='84' y='5' width='2' height='5' fill='%23fff'/%3E%3Crect x='86' y='6' width='2' height='5' fill='%23fff'/%3E%3Crect x='88' y='7' width='1' height='5' fill='%23fff'/%3E%3Crect x='89' y='8' width='1' height='6' fill='%23fff'/%3E%3Crect x='90' y='9' width='2' height='6' fill='%23fff'/%3E%3Crect x='92' y='10' width='1' height='6' fill='%23fff'/%3E%3Crect x='93' y='11' width='1' height='6' fill='%23fff'/%3E%3Crect x='94' y='12' width='1' height='6' fill='%23fff'/%3E%3Crect x='95' y='13' width='1' height='6' fill='%23fff'/%3E%3Crect x='96' y='14' width='1' height='6' fill='%23fff'/%3E%3Crect x='97' y='15' width='1' height='6' fill='%23fff'/%3E%3Crect x='98' y='16' width='1' height='6' fill='%23fff'/%3E%3Crect x='99' y='17' width='1' height='6' fill='%23fff'/%3E%3Crect x='100' y='19' width='1' height='6' fill='%23fff'/%3E%3Crect x='101' y='20' width='1' height='6' fill='%23fff'/%3E%3Crect x='102' y='21' width='1' height='6' fill='%23fff'/%3E%3Crect x='103' y='23' width='1' height='6' fill='%23fff'/%3E%3Crect x='104' y='25' width='1' height='6' fill='%23fff'/%3E%3Crect x='105' y='26' width='1' height='6' fill='%23fff'/%3E%3Crect x='106' y='28' width='1' height='7' fill='%23fff'/%3E%3Crect x='107' y='30' width='1' height='7' fill='%23fff'/%3E%3Crect x='108' y='32' width='1' height='7' fill='%23fff'/%3E%3Crect x='109' y='33' width='1' height='7' fill='%23fff'/%3E%3Crect x='110' y='36' width='1' height='7' fill='%23fff'/%3E%3Crect x='111' y='38' width='1' height='7' fill='%23fff'/%3E%3Crect x='112' y='40' width='1' height='7' fill='%23fff'/%3E%3Crect x='113' y='42' width='1' height='7' fill='%23fff'/%3E%3Crect x='114' y='45' width='1' height='7' fill='%23fff'/%3E%3Crect x='115' y='47' width='1' height='7' fill='%23fff'/%3E%3Crect x='116' y='50' width='1' height='7' fill='%23fff'/%3E%3Crect x='117' y='53' width='1' height='7' fill='%23fff'/%3E%3Crect x='118' y='56' width='1' height='8' fill='%23fff'/%3E%3Crect x='119' y='59' width='1' height='8' fill='%23fff'/%3E%3Crect x='120' y='63' width='1' height='8' fill='%23fff'/%3E%3Crect x='121' y='66' width='1' height='8' fill='%23fff'/%3E%3Crect x='122' y='70' width='1' height='42' fill='%23fff'/%3E%3Crect x='123' y='73' width='1' height='39' fill='%23fff'/%3E%3Crect x='124' y='77' width='1' height='35' fill='%23fff'/%3E%3Crect x='125' y='82' width='1' height='30' fill='%23fff'/%3E%3Crect x='126' y='86' width='1' height='26' fill='%23fff'/%3E%3Crect x='127' y='90' width='1' height='22' fill='%23fff'/%3E%3Crect x='128' y='95' width='1' height='17' fill='%23fff'/%3E%3Crect x='129' y='100' width='1' height='12' fill='%23fff'/%3E%3Crect x='130' y='106' width='1' height='6' fill='%23fff'/%3E%3Crect x='131' y='111' width='1' height='1' fill='%23fff'/%3E%3C/svg%3E");
+    --tile-cloud: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='24' shape-rendering='crispEdges'%3E%3Crect x='22' y='4' width='18' height='4' fill='%23ffffff'/%3E%3Crect x='14' y='8' width='34' height='4' fill='%23ffffff'/%3E%3Crect x='8' y='12' width='46' height='4' fill='%23ffffff'/%3E%3Crect x='8' y='16' width='46' height='4' fill='%23dfe8f2'/%3E%3C/svg%3E");
+    --tile-city: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='96' shape-rendering='crispEdges'%3E%3Crect x='0' y='50' width='18' height='46' fill='%23fff'/%3E%3Crect x='18' y='28' width='14' height='68' fill='%23fff'/%3E%3Crect x='32' y='62' width='20' height='34' fill='%23fff'/%3E%3Crect x='52' y='18' width='16' height='78' fill='%23fff'/%3E%3Crect x='68' y='44' width='12' height='52' fill='%23fff'/%3E%3Crect x='80' y='34' width='22' height='62' fill='%23fff'/%3E%3Crect x='102' y='56' width='14' height='40' fill='%23fff'/%3E%3Crect x='116' y='38' width='16' height='58' fill='%23fff'/%3E%3Crect x='132' y='52' width='12' height='44' fill='%23fff'/%3E%3Crect x='144' y='30' width='16' height='66' fill='%23fff'/%3E%3C/svg%3E");
 
-    .grid-icons { margin-top:1rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-    .grid-icons .card { cursor: pointer; box-sizing: border-box; padding:1rem; width:100px; height: 100px; border:1px solid #ccc;}
+    height: 100%;
+}
 
-/* Tablet and up: sections side by side */
-@media (min-width: 696px) {
-  .grid-container { flex-direction: row; }
-  .grid-section { flex: 1; }
-  .grid-section img { max-width: 600px; }
-  .grid-section .svg-right { width: 140px; }
+/* ==========================================================================
+   Scroll container - the light snap lives here
+   ========================================================================== */
+
+.app__scroll {
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    /* `mandatory`: the scroll always comes to rest on a scene, never between
+       two. Every scene must therefore fit the viewport - with mandatory
+       snapping, anything taller than the scrollport cannot be rested on and
+       its lower half becomes unreachable. */
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+}
+
+.app__scroll::-webkit-scrollbar {
+    display: none;
+}
+
+/* ==========================================================================
+   Scene shell
+   ========================================================================== */
+
+.scene {
+    /* How deep the ground band is. The container pads its flow content clear
+       of it, which is the whole of the vertical bookkeeping now. */
+    --ground-h: min(120px, 17vh);
+
+    position: relative;
+    /* Exactly one viewport, not min-height. Mandatory snapping cannot rest
+       between snap points, so a taller scene would hide its own lower half.
+       Overflowing copy scrolls inside its panel instead - see .scene__panel. */
+    height: 100dvh;
+    overflow: hidden;
+    scroll-snap-align: start;
+    /* One scene per gesture - a fast flick cannot skip past one. */
+    scroll-snap-stop: always;
+    isolation: isolate;
+}
+
+.scene__layer {
+    position: absolute;
+    inset: 0;
+    /* --depth is how far the layer lags the scroll: bigger reads as further. */
+    transform: translate3d(0, calc(var(--scene-progress, 0) * var(--depth, 0) * 1vh), 0);
+    will-change: transform;
+}
+
+/* An illustrated backdrop. Landscape by default; the portrait crop takes over
+   when the scene box is taller than it is wide, because `cover` on a single
+   image cannot span the 0.46-1.78 aspect range without gutting the
+   composition.
+
+   Sized to the full width rather than `cover`, and pinned to the bottom: the
+   art is composed edge to edge, so cropping the sides would lose the trees
+   and walkway. Whatever height is left above is filled with the artwork's own
+   sky colour, sampled from its top edge, so the join is invisible. */
+.scene__layer--backdrop {
+    --depth: 2;
+
+    /* A flat band above the artwork, in the artwork's own dominant sky colour,
+       per orientation - two exports of one scene are not always graded alike
+       and a single colour would band one of them.
+
+       Stretching the artwork's top ROW up instead would join seamlessly, but
+       it drags any cloud that touches the top edge upward as a vertical
+       streak. The flat colour is the wanted look: sky, not stripes. */
+    background-color: var(--sky-landscape, transparent);
+    background-image: var(--backdrop-landscape, none);
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    /* The art is exported at its native pixel scale and upscaled here. */
+    image-rendering: pixelated;
+}
+
+@media (orientation: portrait) {
+    .scene__layer--backdrop {
+        background-image: var(--backdrop-portrait, var(--backdrop-landscape, none));
+        background-color: var(--sky-portrait, var(--sky-landscape, transparent));
+    }
+}
+
+/* Where artwork supplies the world, the generated layers would only fight it. */
+.scene--photo .scene__layer--sky,
+.scene--photo .scene__layer--stars,
+.scene--photo .scene__layer--ridge,
+.scene--photo .scene__layer--landmark,
+.scene--photo .scene__layer--ground {
+    display: none;
+}
+
+/* Clouds are the exception - the artwork's sky is flat, so they still have
+   somewhere to drift. They paint over the backdrop, so they have to stop at
+   the roofline. The artwork is bottom-anchored at `100% auto`, which makes
+   the horizon a fixed multiple of the scene's WIDTH up from the floor - so
+   the offset is in vw, not a percentage (which resolves against height).
+   Where the artwork overflows the scene the band computes to nothing and the
+   clouds simply do not render, which is the right answer. */
+.scene--photo {
+    /* The column count backdrop.py downsamples to, per orientation. The cloud
+       sprites are drawn at this same scale, so one cloud pixel covers one
+       artwork pixel. */
+    --backdrop-cols: 640;
+}
+
+.scene--photo .scene__layer--clouds {
+    /* Same depth as the backdrop, so the two never drift apart and the
+       horizon offset below holds at every scroll position. At the layers'
+       own depths they would separate by up to 11vh mid-scroll and the clouds
+       would ride down over the roofline. */
+    --depth: 2;
+
+    bottom: calc(var(--horizon-landscape) * 100vw);
+}
+
+/* The drawn sprites carry their own alpha, so they are not faded the way the
+   tinted mask tiles are by --clouds. */
+.scene--photo .scene__layer--clouds {
+    opacity: 1;
+}
+
+/* The twinkle band is bounded by where the artwork's own stars stop, not by
+   the horizon: the horizon marks the first wide non-sky object, which here is
+   the moon, and stars crowded above that would leave most of the sky still. */
+.scene--photo .scene__layer--twinkle {
+    --depth: 2;
+
+    bottom: calc(var(--stars-landscape) * 100vw);
+}
+
+@media (orientation: portrait) {
+    .scene--photo {
+        --backdrop-cols: 420;
+    }
+
+    .scene--photo .scene__layer--clouds {
+        bottom: calc(var(--horizon-portrait) * 100vw);
+    }
+
+    .scene--photo .scene__layer--twinkle {
+        bottom: calc(var(--stars-portrait) * 100vw);
+    }
+}
+
+/* The tiled mask is for generated skies only - CloudField supplies real
+   sprites here, and both at once would double the weather. */
+.scene--photo .scene__layer--clouds::before,
+.scene--photo .scene__layer--clouds::after {
+    display: none;
+}
+
+/* Twinkling stars over a photographed night sky - the artwork's own stars are
+   painted in and cannot move, so these sit on top. Solid blocks on the
+   backdrop's pixel grid, so they are the same size as the painted ones. */
+.star {
+    position: absolute;
+    left: var(--star-x);
+    top: var(--star-y);
+    width: calc(var(--star-px) * 100vw / var(--backdrop-cols));
+    aspect-ratio: 1;
+    background-color: var(--star-colour);
+    animation: star-twinkle var(--star-dur) ease-in-out infinite;
+    animation-delay: var(--star-delay);
+    will-change: opacity;
+}
+
+@keyframes star-twinkle {
+    0%,
+    100% {
+        opacity: var(--star-dim);
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* After the shorthand above, which resets play-state to `running`. */
+.star {
+    animation-play-state: paused;
+}
+
+.scene.is-onscreen .star {
+    animation-play-state: running;
+}
+
+/* The riverboat. Two frames whose only difference is the paddle wheel's
+   spokes, so flipping between them spins the wheel while the whole thing
+   crosses the water. Same depth as the backdrop, or it would drift off the
+   river as the scene scrolls. */
+.scene__layer--boat {
+    --depth: 2;
+}
+
+.boat {
+    position: absolute;
+    /* Bow points right, so it enters at the left and sails out to the right. */
+    right: 100%;
+    bottom: calc(var(--boat-landscape) * 100vw);
+    /* Native size of boat-N.png - keep in step with art/cut-boat.py. */
+    --boat-px: 63;
+
+    /* One boat pixel drawn the size of one backdrop pixel, as with the clouds. */
+    width: calc(var(--boat-px) * 100vw / var(--backdrop-cols));
+    aspect-ratio: 63 / 25;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+    animation:
+        boat-cross 74s linear infinite,
+        boat-paddle 0.34s steps(1, end) infinite;
+    will-change: transform;
+}
+
+@media (orientation: portrait) {
+    .boat {
+        bottom: calc(var(--boat-portrait) * 100vw);
+    }
+}
+
+@keyframes boat-cross {
+    to {
+        transform: translate3d(calc(100vw + 100%), 0, 0);
+    }
+}
+
+/* After the shorthand above, which resets play-state to `running`. */
+.boat {
+    animation-play-state: paused;
+}
+
+.scene.is-onscreen .boat {
+    animation-play-state: running;
+}
+
+/* background-image is a discrete property, so the ranges are written out
+   rather than left to interpolation - the flip must be unambiguous. */
+@keyframes boat-paddle {
+    0%,
+    49.99% {
+        background-image: var(--boat-frame-1);
+    }
+    50%,
+    100% {
+        background-image: var(--boat-frame-2);
+    }
+}
+
+/* Each cloud starts just off the right edge and crosses to just off the left.
+   A negative delay set per cloud drops it partway along, which is what places
+   it horizontally - see CloudField. */
+.cloud {
+    position: absolute;
+    left: 100%;
+    bottom: var(--cloud-y);
+    /* One cloud pixel, drawn the size of one backdrop pixel. */
+    width: calc(var(--cloud-px) * 100vw / var(--backdrop-cols));
+    aspect-ratio: var(--cloud-ar);
+    background-image: var(--cloud-src);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+    animation: cloud-cross var(--cloud-dur) linear infinite;
+    animation-delay: var(--cloud-delay);
+    will-change: transform;
+}
+
+@keyframes cloud-cross {
+    to {
+        transform: translate3d(calc(-100vw - 100%), 0, 0);
+    }
+}
+
+.scene__layer--sky {
+    --depth: 0;
+
+    /* The sun is a radial stop that vanishes when --sun is 0, so scenes opt in
+       without needing another element. */
+    background-image:
+        radial-gradient(
+            circle at var(--sun-x, 22%) var(--sun-y, 78%),
+            rgba(255, 246, 214, var(--sun, 0)) 0 2.6%,
+            rgba(255, 214, 138, calc(var(--sun, 0) * 0.5)) 2.6% 4.4%,
+            transparent 4.4%
+        ),
+        linear-gradient(
+            180deg,
+            var(--sky-top) 0%,
+            var(--sky-mid, var(--sky-top)) 55%,
+            var(--sky-bottom) 100%
+        );
+}
+
+.scene__layer--stars {
+    --depth: 18;
+    opacity: var(--stars, 0);
+    background-image:
+        radial-gradient(2px 2px at 24px 30px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 140px 72px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 76px 132px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 196px 24px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 108px 186px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 232px 148px, #fff 99%, transparent 100%),
+        radial-gradient(2px 2px at 40px 96px, #f7d51d 99%, transparent 100%),
+        radial-gradient(2px 2px at 168px 108px, #f7d51d 99%, transparent 100%);
+    background-size: 256px 256px;
+}
+
+.scene__layer--clouds {
+    --depth: 13;
+    opacity: var(--clouds, 0);
+}
+
+/* Two rows drifting at different speeds - the nearer row moves faster, which
+   reads as depth. Each row is one tile wider than the scene and translates by
+   exactly one tile width, so the repeat is seamless with no jump. */
+.scene__layer--clouds::before,
+.scene__layer--clouds::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    content: '';
+    /* Masked rather than painted, so a scene can tint them - sunset clouds
+       are not the same white as midday ones. */
+    background-color: var(--cloud-color, #fff);
+    mask-image: var(--tile-cloud);
+    mask-repeat: repeat-x;
+    will-change: transform;
+}
+
+.scene__layer--clouds::before {
+    width: calc(100% + 256px);
+    mask-position: 5% 14%;
+    mask-size: 256px 96px;
+    animation: cloud-drift-far 48s linear infinite;
+}
+
+.scene__layer--clouds::after {
+    width: calc(100% + 192px);
+    mask-position: 62% 34%;
+    mask-size: 192px 72px;
+    animation: cloud-drift-near 32s linear infinite;
+}
+
+/* LSUS drifts right; Minden High keeps the default leftward drift, so the two
+   school scenes still blow against each other. Longhand, so it does not reset
+   the play-state set further down. */
+.scene--campus .scene__layer--clouds::before,
+.scene--campus .scene__layer--clouds::after,
+.scene--campus .cloud {
+    animation-direction: reverse;
+}
+
+@keyframes cloud-drift-far {
+    to {
+        transform: translate3d(-256px, 0, 0);
+    }
+}
+
+@keyframes cloud-drift-near {
+    to {
+        transform: translate3d(-192px, 0, 0);
+    }
+}
+
+/* After the shorthands above, which reset play-state to `running`. */
+.scene__layer--clouds::before,
+.scene__layer--clouds::after,
+.cloud {
+    animation-play-state: paused;
+}
+
+.scene.is-onscreen .scene__layer--clouds::before,
+.scene.is-onscreen .scene__layer--clouds::after,
+.scene.is-onscreen .cloud {
+    animation-play-state: running;
+}
+
+.scene__layer--ridge {
+    --depth: 8;
+
+    top: auto;
+    bottom: var(--ground-h);
+    /* Fixed height + integer-multiple mask-size per tier: the silhouette keeps
+       one pixel scale from 320px to 4K instead of stretching. */
+    height: 96px;
+    /* Windows are drawn on top of the silhouette colour and then masked with
+       it, so they can only ever appear inside a building. */
+    background-color: var(--ridge);
+    background-image: var(--ridge-windows, none);
+    background-repeat: repeat-x;
+    background-size: 320px 192px;
+    mask-image: var(--ridge-tile, var(--tile-hills));
+    mask-repeat: repeat-x;
+    mask-position: left bottom;
+    mask-size: 160px 96px;
+}
+
+/* One-off landmark: the Gateway Arch behind the St Louis skyline. It needs its
+   own layer because .scene__layer--ridge carries a mask-image, and a mask
+   clips the element's pseudo-elements too - putting the arch there left only
+   the slivers where it happened to overlap a building. */
+.scene__layer--landmark {
+    --depth: 6;
+
+    top: auto;
+    bottom: var(--ground-h);
+    /* Tall enough that the crown clears the panel and reads against open sky. */
+    height: var(--landmark-h, clamp(220px, 46vh, 460px));
+    background-image: var(--landmark, none);
+    background-repeat: no-repeat;
+    background-position: var(--landmark-x, 50%) bottom;
+    background-size: auto 100%;
+}
+
+.scene__layer--ground {
+    --depth: 0;
+    top: auto;
+    bottom: 0;
+    height: var(--ground-h);
+    background-color: var(--ground);
+    background-image: var(--ground-overlay, none);
+    background-repeat: var(--ground-overlay-repeat, repeat);
+    background-size: var(--ground-overlay-size, 240px 128px);
+    border-top: 5px solid var(--ink);
+}
+
+/* Centre line for scenes whose ground is a road. */
+.scene__layer--ground::after {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: var(--road-line-y, 66%);
+    height: var(--road-line-h, 6px);
+    content: '';
+    background-image: var(--road-line, none);
+    background-repeat: repeat-x;
+}
+
+/* Dithered band where ground meets sky - the cheapest way to look 8-bit. */
+.scene__layer--ground::before {
+    position: absolute;
+    right: 0;
+    bottom: 100%;
+    left: 0;
+    height: 24px;
+    content: '';
+    background-image:
+        linear-gradient(45deg, var(--ground) 25%, transparent 25%, transparent 75%, var(--ground) 75%),
+        linear-gradient(45deg, var(--ground) 25%, transparent 25%, transparent 75%, var(--ground) 75%);
+    background-position: 0 0, 12px 12px;
+    background-size: 24px 24px;
+}
+
+/* The container. This is the only thing that constrains content width. */
+.scene__inner {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    /* Fluid below --container, fixed and centred at and above it. */
+    width: min(100% - var(--gutter) * 2, var(--container));
+    height: 100%;
+    margin-inline: auto;
+    /* Clears the HUD at the top and the ground band at the bottom, so flow
+       content always sits on the ground line rather than through it, and the
+       rail down the left edge where that is shown. The inset is only on the
+       left, which puts the content half a rail off centre - 11px, which is
+       not visible, and cheaper than giving up the width on both sides. */
+    padding: 5.25rem 0 var(--ground-h) var(--rail-inset, 0);
+    /* Transform only - it never affects layout, so parallax cannot shift the
+       boxes the panel and sprite negotiate between themselves. */
+    transform: translate3d(0, calc(var(--scene-progress, 0) * -2vh), 0);
+}
+
+.scene__panel {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    /* min-height: 0 lets a flex item shrink below its content; without it the
+       panel would push the scene taller than the viewport. */
+    min-height: 0;
+    justify-content: center;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* margin-top: auto pushes the sprite to the bottom of the flow area, whose
+   edge is the ground line. The panel takes the space above it. Neither can
+   land on the other, because they are siblings in one flex column. */
+.scene__sprite {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+    margin-top: auto;
+    padding-top: 1rem;
+    justify-content: center;
+}
+
+/* A second sprite under the sign. Smaller than the sign's own height budget,
+   so the pair reads as a headline with an object beneath it rather than two
+   things competing. */
+.scene__prop {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: clamp(0.5rem, 1.5vh, 1.25rem);
+}
+
+/* Smaller while stacked: there the sign, the prop and the panel share one
+   column, and the panel is the part that has to stay readable. */
+.scene__prop .sprite {
+    height: min(16vh, 12rem);
+}
+
+/* Props that are images rather than PixelArt grids, so they carry their source
+   on a variable instead of a stack of <rect>s. */
+.sprite--image {
+    background-image: var(--image-src);
+    background-position: center;
+    background-repeat: no-repeat;
+    /* `contain` scales uniformly and never distorts: the art keeps its own
+       proportions and letterboxes inside whatever box the height budget gives
+       it. `100% 100%` would stretch it, because when the height budget and
+       max-width both bind the box stops matching the art's aspect - which the
+       SVG sprites survive but a background image does not. */
+    background-size: contain;
+    image-rendering: pixelated;
+}
+
+/* medium (tablet) - still one column; the tiers below change the ridge scale
+   and, at desktop, put the panel and sprite side by side. */
+@media (min-width: 768px) {
+    /* The rail appears at this tier, so the scenes make room for it. */
+    .app {
+        --rail-inset: calc(var(--rail-gutter) * 2 + var(--rail-marker));
+    }
+
+    .scene {
+        --ground-h: min(150px, 18vh);
+    }
+
+    /* 1.5x the tile - integer multiples keep the steps hard. */
+    .scene__layer--ridge {
+        height: 144px;
+        mask-size: 240px 144px;
+    }
+}
+
+/* A logo belongs in the sky, not standing on the ground like a building.
+   The panel is `flex: 1 1 auto` and swallows all the free space, so an auto
+   margin has nothing to push against - lifting the sprite takes reordering. */
+.scene--sprite-sky .scene__sprite {
+    order: -1;
+    margin-top: 0;
+    padding-top: 0;
+    padding-bottom: 1rem;
+}
+
+/* A wide wordmark is sized off the height budget, so its derived width can
+   exceed the stage and get pinned edge to edge. Cap it while stacked - it is
+   signage, not scenery. Desktop gives it its own column and lifts the cap.
+
+   These signs end up width-limited rather than height-limited, so --sign-size
+   is the lever for how big one draws: trimming the width cap scales the whole
+   thing, and because the box is top-aligned its top edge does not move. */
+.scene--sprite-sky .scene__sprite .sprite {
+    max-width: min(var(--sign-size, 100%), 26rem);
+}
+
+/* Which side a sign enters from, taken from the side its scene puts the panel
+   on: panel right means sign left, so it flies in from the left. Both come
+   from one declared value - see `panelSide` in Scene.js - so they cannot
+   disagree, and neither moves when a scene is inserted. */
+.scene--panel-right {
+    --fly-from: -1;
+}
+
+/* The logo flies in from the right as the scene lands. Transform and opacity
+   only, so it composites on the GPU and cannot shift the layout it flies
+   into; the scene's own `overflow: hidden` hides the run-up. Keyed to
+   `is-settled` rather than `is-onscreen` - see useActiveScene. */
+.scene--sprite-sky .scene__sprite {
+    opacity: 0;
+    /* Own width clears the element's own box; the 20vw covers the gap from
+       its edge to the viewport's, which differs per tier. `--fly-from` is the
+       sign: 1 enters from the right, -1 from the left, so each sign can come
+       in from the side it ends up on. */
+    transform: translate3d(calc((100% + 20vw) * var(--fly-from, 1)), 0, 0);
+    /* 900ms matches the scripted scroll in useSceneSnap, and `is-settled`
+       fires partway through it, so the sign lands just after the scene does.
+       easeOutCubic, the same family as the scroll's own easing: curves with a
+       high first control point (easeOutBack and friends) spend 95% of the
+       travel in the first third and read as a snap, not a flight. */
+    transition:
+        transform 900ms cubic-bezier(0.215, 0.61, 0.355, 1),
+        opacity 300ms ease-out;
+    will-change: transform;
+}
+
+.scene--sprite-sky.is-settled .scene__sprite {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+/* wide (desktop) - the panel and the sprite become two halves of one flex
+   row. `flex: 1 1 0` with `min-width: 0` is the guard that stops either half
+   growing past its share to fit its content. */
+@media (min-width: 1024px) {
+    .scene {
+        --ground-h: min(190px, 20vh);
+    }
+
+    .scene__layer--ridge {
+        height: 192px;
+        mask-size: 320px 192px;
+    }
+
+    .scene--story .scene__inner {
+        flex-direction: row;
+        align-items: center;
+        gap: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .scene--story .scene__panel,
+    .scene--story .scene__sprite {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+
+    /* A story scene with no sprite beside it: the panel is the only thing in
+       the row, so `flex: 1 1 0` would stretch it the whole way across and the
+       artwork would have nowhere to show. Capped to the half it would have had
+       with a sprite for company. */
+    .scene--story .scene__panel:only-child {
+        max-width: min(50%, 34rem);
+    }
+
+    /* Sprite stays on the ground line while the panel centres beside it. */
+    .scene--story .scene__sprite {
+        margin-top: 0;
+        padding-top: 0;
+        align-self: flex-end;
+    }
+
+    /* Side by side now, so "sky" means top-aligned. Reset the reorder or the
+       sprite would jump columns and break the alternating rhythm below. */
+    .scene--story.scene--sprite-sky .scene__sprite {
+        order: 0;
+        align-self: flex-start;
+        /* Dropped off the top edge so it reads level with the panel beside it
+           rather than floating above it. Only the side-by-side tier needs it;
+           stacked, the sign is the top of the column already. The panel is
+           centred, so how far down its own top edge sits depends on how much
+           copy it holds - which is why this is per scene rather than one
+           number that could suit all of them. */
+        margin-top: var(--sign-drop, 10dvh);
+    }
+
+    .scene--sprite-sky .scene__sprite .sprite {
+        max-width: var(--sign-size, 100%);
+    }
+
+    /* Its own column now, so the prop can have its full height back. A
+       portrait phone needs more of it than the old landscape browser did. */
+    .scene__prop .sprite {
+        height: min(45vh, 18rem);
+    }
+
+    /* The panel's side, stated per scene. Reversing the row puts the panel
+       second, which is to say on the right. */
+    .scene--story.scene--panel-right .scene__inner {
+        flex-direction: row-reverse;
+    }
+}
+
+/* ==========================================================================
+   Scene palettes
+   ========================================================================== */
+
+.scene--start {
+    --sky-top: #14102b;
+    --sky-bottom: #3b2159;
+    --ridge: #1d1733;
+    --ridge-tile: var(--tile-city);
+    --ground: #241c3d;
+    --stars: 1;
+}
+
+.scene--dawn {
+
+    /* Matches the Minden High reference: flat bright blue over the street.
+       The ground reads as sidewalk, curb, then asphalt with a centre line. */
+    --sky-top: #2d99fc;
+    --sky-mid: #57b0fd;
+    --sky-bottom: #8fcbfe;
+    --ridge: #3f8a3f;
+    --clouds: 1;
+
+    --ground: #4b5058;
+    --ground-overlay: linear-gradient(
+        180deg,
+        #d8d2c2 0 26%,
+        #b4ae9e 26% 31%,
+        #7f838a 31% 34%,
+        transparent 34%
+    );
+    --road-line: repeating-linear-gradient(
+        90deg,
+        #e9e7dd 0 34px,
+        transparent 34px 82px
+    );
+    --road-line-y: 68%;
+    /* The bands span the whole ground, so the overlay must not tile. */
+    --ground-overlay-size: 100% 100%;
+    --ground-overlay-repeat: no-repeat;
+}
+
+/* The dither band belongs to grass and dirt, not to kerbstone. */
+.scene--dawn .scene__layer--ground::before {
+    display: none;
+}
+
+/* The University Center interior. It has no generated palette because it is
+   a photo scene - what it needs from a theme of its own is somewhere to put
+   the settings below without them reaching the degree scene, which shared
+   `campus` with it. */
+.scene--port {
+    /* The room is already covered in LSUS purple and gold, including the
+       anchor on the far wall, so a full-size wordmark over it competes with
+       the artwork rather than labelling it. */
+    --sign-size: 55%;
+}
+
+.scene--campus {
+    /* City skyline behind the hall, lawn in front - as in the reference. */
+    --sky-top: #4bb3e8;
+    --sky-bottom: #b7e4f7;
+    --ridge: #a9b6dd;
+    --ridge-tile: var(--tile-city);
+    --ground: #86a832;
+    --clouds: 0.55;
+}
+
+.scene--summer {
+
+    /* St Louis riverfront at sunset - the internship was in Missouri. Every
+       part of this is generated: skyline, lit windows, arch, water. */
+    --sky-top: #4a9fd8;
+    --sky-mid: #f6b16b;
+    --sky-bottom: #ff8c2e;
+    --sun: 1;
+    --sun-x: 20%;
+    --sun-y: 82%;
+    --clouds: 0.95;
+    --cloud-color: #f8a877;
+    --ridge: #2f3d63;
+    --ridge-tile: var(--tile-downtown);
+    --ridge-windows: var(--tile-windows);
+    --landmark: var(--arch-stlouis);
+    --landmark-h: clamp(240px, 44vh, 420px);
+    --landmark-x: 34%;
+    --ground: #2f6cb0;
+    --ground-overlay: var(--tile-water);
+    --ground-h: min(190px, 20vh);
+}
+
+.scene--neon {
+    --sky-top: #21123f;
+    --sky-bottom: #a8306e;
+    --ridge: #2b1548;
+    --ridge-tile: var(--tile-city);
+    --ground: #1b0f30;
+    --stars: 0.8;
+}
+
+.scene--civic {
+
+    --sky-top: #7fa6c4;
+    --sky-bottom: #e2ecf2;
+    --ridge: #6c7f8c;
+    --ground: #5b6b76;
+    --clouds: 0.7;
+}
+
+.scene--lab {
+    --sky-top: #0d2a2c;
+    --sky-bottom: #1f6b63;
+    --ridge: #10393a;
+    --ridge-tile: var(--tile-city);
+    --ground: #0d2a2c;
+    --stars: 0.55;
+}
+
+.scene--tower {
+
+    /* This panel carries the most copy of any scene, so centring puts its top
+       edge higher than elsewhere and the default drop leaves the sign 50px
+       below it. */
+    --sign-drop: 4.5dvh;
+
+    /* The mark plus wordmark is a chunky pair; a tenth off settles it. */
+    --sign-size: 90%;
+
+    --sky-top: #2b5f8a;
+    --sky-bottom: #8fc4dd;
+    --ridge: #2f4a63;
+    --ridge-tile: var(--tile-city);
+    --ground: #33465a;
+    --clouds: 0.55;
+}
+
+.scene--dusk {
+
+    --sky-top: #4a2a6b;
+    --sky-bottom: #f08a4b;
+    --ridge: #4a2f52;
+    --ridge-tile: var(--tile-city);
+    --ground: #35243f;
+    --stars: 0.45;
+}
+
+.scene--shield {
+    /* This backdrop is an aerial: its sky is a strip across the top rather
+       than half the frame. The sign is raised to the very top of the stage so
+       as much of it as possible sits against blue - the band above the artwork
+       is the same colour, so starting there costs nothing - and it is left at
+       full width, which puts its lower edge over the haze below the skyline.
+       That is the trade: the sky alone cannot hold a sign this size. */
+    --sign-drop: 0;
+
+    --sky-top: #10233f;
+    --sky-bottom: #2c5f8f;
+    --ridge: #16304f;
+    --ridge-tile: var(--tile-city);
+    --ground: #10233f;
+    --stars: 0.7;
+}
+
+.scene--quest {
+    --sky-top: #120d18;
+    --sky-bottom: #2f2030;
+    --ridge: #1a1220;
+    --ground: #241a26;
+}
+
+.scene--skills {
+    --sky-top: #101a2b;
+    --sky-bottom: #1d3350;
+    --ridge: #14243c;
+    --ridge-tile: var(--tile-city);
+    --ground: #0e1726;
+    --stars: 0.5;
+}
+
+/* The end screen's panel is let down to 80% so the desk behind it reads
+   through. Only the fill is softened - the NES border is a border-image and
+   stays solid, which keeps the box's edge crisp against a busy backdrop. */
+.scene--contact .nes-container.panel {
+    background-color: rgba(33, 37, 41, 0.8);
+}
+
+/* The end screen's artwork carries its own headline across the upper right,
+   which is exactly where a centred panel lands - it left the words poking out
+   around the panel's edges. Dropping the panel to the foot of the stage clears
+   them, and puts it over the desk instead. */
+@media (min-width: 1024px) {
+    .scene--contact .scene__panel {
+        align-self: flex-end;
+    }
+}
+
+.scene--contact {
+    --sky-top: #0c0a1c;
+    --sky-bottom: #2a1c4a;
+    --ridge: #150f28;
+    --ridge-tile: var(--tile-city);
+    --ground: #100b1e;
+    --stars: 1;
+}
+
+
+/* ==========================================================================
+   Shared panel furniture (used by every scene)
+   ========================================================================== */
+
+/* Fluid: the panel fills whatever column it is in at every tier. Line length
+   is held in check by the body font scaling with the viewport (index.css)
+   rather than by a fixed pixel cap. */
+.nes-container.panel {
+    width: 100%;
+    padding: clamp(0.9rem, 2vw, 1.75rem) clamp(1rem, 2.2vw, 2rem);
+    background-color: #212529;
+}
+
+/* "PricewaterhouseCoopers" has no break opportunity and the notch is
+   shrink-to-fit, so it needs an explicit cap and `anywhere`.
+   Only the ceiling was raised to enlarge these: the vw term is left alone
+   because it governs below about 585px, where the longest name already fills
+   the notch - pushing it there breaks "PricewaterhouseCooper|s" across two
+   lines rather than making anything more readable. */
+.nes-container.with-title.panel > .title {
+    max-width: 100%;
+    font-size: clamp(0.5rem, 2.6vw, 0.95rem);
+    overflow-wrap: anywhere;
+}
+
+.panel__level {
+    display: block;
+    margin: 0 0 0.35rem;
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    color: #f7d51d;
+    letter-spacing: 0.12em;
+}
+
+.panel__role {
+    margin: 0 0 0.9rem;
+    font-size: 1.15rem;
+    color: #92cc41;
+}
+
+.panel__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0 0 1rem;
+    font-size: 1rem;
+    color: #d6d6e0;
+}
+
+.panel__meta > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.panel__body {
+    margin: 0 0 1rem;
+    color: #f4f4f8;
+}
+
+.panel__exit {
+    margin: 1rem 0 0;
+    font-size: 0.95rem;
+    color: #b3b3c2;
+}
+
+/* "Loot" from each role: what actually came out of the job. */
+.drops {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.drops__item {
+    display: flex;
+    gap: 0.6rem;
+    font-size: 1rem;
+    color: #f4f4f8;
+}
+
+.drops__item::before {
+    color: #f7d51d;
+    content: '+';
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 1rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tag {
+    padding: 0.15rem 0.5rem;
+    font-family: var(--font-display);
+    font-size: 0.55rem;
+    color: #212529;
+    background-color: #f7d51d;
+    border: 3px solid var(--ink);
+}
+
+.scroll-hint {
+    position: absolute;
+    right: 0;
+    bottom: 1.5rem;
+    left: 0;
+    z-index: 3;
+    font-family: var(--font-display);
+    font-size: 0.62rem;
+    color: #fff;
+    text-align: center;
+    text-shadow: 3px 3px 0 var(--ink);
+    animation: blink 1.1s steps(2, end) infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
 }
